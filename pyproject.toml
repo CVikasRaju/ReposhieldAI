@@ -1,0 +1,18 @@
+[project]
+name = "reposhield-ai"
+version = "0.1.0"
+description = "A policy, privacy and audit gateway between AI agents and the systems they touch."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+asyncio_mode = "auto"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
