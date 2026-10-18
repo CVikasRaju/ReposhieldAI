@@ -1,0 +1,105 @@
+version: 1
+profile: developer
+mode: strict
+
+task:
+  description: "Fix the typo in the README quick-start and update imports in src/"
+  scope_paths: ["README.md", "docs/**", "src/**"]
+
+paths:
+  workspace: ./workspace
+  database: ./workspace/business.db
+
+protect:
+  - { kind: path,  match: "**/.env*",    read: block, write: block, delete: block }
+  - { kind: path,  match: "**/*.pem",    read: block, write: block, delete: block }
+  - { kind: path,  match: "**/id_rsa*",  read: block, write: block, delete: block }
+  - { kind: path,  match: "**/*.db",     read: block, write: block, delete: block }
+  - { kind: path,  match: "src/auth/**", read: mask,  write: hold,  delete: block }
+  - kind: table
+    match: customers
+    read: hold
+    write: hold
+    delete: block
+    columns: [full_name, email, phone, national_id]
+
+hints:
+  - { match: "src/pricing/**", weight: 0.6 }
+  - { match: "config/**",      weight: 0.5 }
+
+benign_context:
+  paths: ["tests/**", "fixtures/**", "docs/examples/**"]
+  known_test_values: ["4111111111111111", "4242424242424242", "5555555555554444"]
+  example_email_domains: ["example.com", "example.org", "test.com"]
+
+commands:
+  allow:                       # run without approval if every path argument passes file policy
+    - "ls*"
+    - "cat *"
+    - "head *"
+    - "tail *"
+    - "grep *"
+    - "wc *"
+    - "git status"
+    - "git diff*"
+    - "git log*"
+  destructive:                 # HOLD, snapshot on approval
+    - "rm -rf *"
+    - "rm -r *"
+    - "git push --force*"
+    - "git push -f*"
+    - "git reset --hard*"
+    - "git clean -f*"
+    - "chmod -R *"
+  deny:                        # always BLOCK
+    - "curl *"
+    - "wget *"
+    - "nc *"
+    - "ncat *"
+    - "ssh *"
+    - "scp *"
+    - "sudo *"
+    - "mkfs*"
+    - "dd *"
+  default: hold                # anything unmatched
+  timeout_seconds: 30
+  max_output_bytes: 100000
+
+egress:
+  default: deny
+  allow_hosts: ["api.github.com", "pypi.org", "registry.npmjs.org"]
+  allow_private_ranges: false
+  hold_methods: [POST, PUT, PATCH, DELETE]
+  timeout_seconds: 10
+
+database:
+  max_rows: 200
+
+masking:
+  code: structure-preserving
+  tables: typed-placeholders
+  restore_on_write: true
+  min_body_lines: 3
+
+scoring:
+  weights: { base: 0.45, content: 0.30, behaviour: 0.25 }
+  thresholds: { mask: 0.30, hold: 0.55, block: 0.80 }
+  detectors: { auto_mask_confidence: 0.85, ignore_below: 0.40 }
+
+behaviour:
+  window_seconds: 60
+  weights: { blocked: 0.35, sensitive_reads: 0.25, breadth: 0.20, mismatch: 0.20 }
+
+kill_switch:
+  max_blocked_attempts: 5
+  window_seconds: 60
+  behaviour_threshold: 0.90
+
+approval:
+  channels: [console, web]
+  timeout_seconds: 60
+  on_timeout: deny
+
+limits:
+  max_read_bytes: 200000
+  hide_protected_in_listing: true
