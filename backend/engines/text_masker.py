@@ -79,9 +79,11 @@ class MaskMapStore:
     receives the same token.
     """
 
-    def __init__(self, conn: sqlite3.Connection) -> None:
+    def __init__(
+        self, conn: sqlite3.Connection, lock: threading.Lock | threading.RLock | None = None
+    ) -> None:
         self._conn = conn
-        self._lock = threading.Lock()
+        self._lock = lock or threading.Lock()
         with self._lock:
             self._conn.execute(_MASK_MAP_SCHEMA)
             self._conn.commit()

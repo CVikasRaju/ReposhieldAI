@@ -2,20 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-
+from backend.core.models import SignalScores
 from backend.policy.models import ScoringWeights
-
-
-@dataclass(frozen=True)
-class SignalScores:
-    """The signals shown in the UI and the combined score."""
-
-    pattern: float
-    location: float
-    content: float
-    behaviour: float
-    combined: float
 
 
 class RiskScorer:
