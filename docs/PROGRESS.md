@@ -79,3 +79,43 @@ Phase-by-phase build record. Each entry lists status, acceptance criteria, skips
 **Deviations:** training data has 456 unique examples after de-duplication (minimum 400). No Faker dependency; deterministic generators are used.
 
 **How to run:** `make train-model && make test`.
+
+## Phase 4: Core pipeline
+
+**Status:** complete
+
+**Acceptance criteria**
+
+- Full lifecycle implemented: resolve session, prepare, rules, detect, score, decide, hold, snapshot, execute, mask, log, respond. Met.
+- Strictest-wins with masking floor, approval resolution semantics and the secret invariant. Met.
+- Fail closed on every exception with `INTERNAL_ERROR`, an audit event and a generic agent message. Met.
+- Events are appended once under one lock; snapshots and approvals link in the same transaction. Met.
+- Held calls freeze until an async resolver answers; timeout produces `denied` with `APPROVAL_TIMEOUT`. Met.
+- Filesystem read/write/delete, command, SQL and network connectors all pass through the pipeline. Met.
+
+**Skipped:** none in the pipeline itself. Phase 5 integration tests cover the connectors end to end.
+
+**Deviations:** none.
+
+**How to run:** `make test` (205 tests at the end of this phase).
+
+## Phase 5: Connectors and MCP server
+
+**Status:** complete
+
+**Acceptance criteria**
+
+- All eight tools work through the real MCP server with the SDK client. Met by `backend/tests/test_mcp.py` (12 integration tests using `httpx` plus the installed SDK's `streamable_http_client`).
+- Filesystem jail, `.aishield` / `data` tamper targets, symlink escape, binary, oversize and listing hiding. Met; kill-switch locking is exercised separately so each criterion is observed.
+- Command operators, deny/destructive lists, default hold, path analysis, no shell, minimal env, output scanning and workspace snapshot on approved destructive commands. Met. Output scanning was fixed during this phase: command/network output now passes through the masker even for non-read actions.
+- Database classification, read-only reads, snapshot before writes, row cap, column masking, multi-statement and `ATTACH`/`PRAGMA` blocks. Met.
+- Network allowlist, SSRF private-range block, payload scan, method rule, and a real allowlisted GET against a local server. Met.
+- Listener isolation: `/api/health` on the MCP listener and `/mcp` on the API listener return 404. Met.
+- A held call stays frozen until resolved through the approvals module. Met.
+- `get_session_id(ctx)` resolves header, then transport id, then `default`. Met with unit coverage.
+
+**Skipped:** none.
+
+**Deviations:** the installed SDK exposes tool results as `structuredContent`; the helper falls back to the text payload when it is absent. `http_request` accepts a JSON object body and serialises it, because the SDK client parses object-shaped strings before validation.
+
+**How to run:** `make test`; the Phase 5 tests start real uvicorn listeners on ephemeral ports.
