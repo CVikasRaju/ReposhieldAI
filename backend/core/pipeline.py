@@ -203,7 +203,7 @@ class Pipeline:
         return "".join(parts)
 
     def _safe_target(self, prepared: Prepared) -> str:
-        target = prepared.display_target or prepared.target
+        target = prepared.target
         return self._safe_text(target)[:300]
 
     def _redact_spans(self, content: str, spans: list[Span]) -> str:

@@ -471,7 +471,9 @@ async def test_listeners_are_isolated(tmp_path: Path) -> None:
     try:
         async with running_server(gateway.mcp_app) as mcp_base:
             async with running_server(gateway.api_app) as api_base:
-                async with httpx.AsyncClient(timeout=5.0) as client:
+                async with httpx.AsyncClient(
+                    headers={"X-Approver-Token": "integration-token"}, timeout=5.0
+                ) as client:
                     assert (await client.get(f"{api_base}/api/health")).status_code == 200
                     assert (await client.get(f"{mcp_base}/api/health")).status_code == 404
                     assert (await client.get(f"{api_base}/mcp")).status_code == 404

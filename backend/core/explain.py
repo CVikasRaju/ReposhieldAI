@@ -42,6 +42,7 @@ TEMPLATES: dict[str, str] = {
     "UNSUPPORTED_BINARY": "Binary files are not available to the agent.",
     "TOO_LARGE": "The content is larger than the allowed limit.",
     "WATCHDOG_ALERT": "The agent's process tried to act outside the safety gateway.",
+    "ROLLBACK": "You restored the state from before this action.",
     "INTERNAL_ERROR": "Something went wrong inside the safety gateway, so the action was blocked to be safe.",
     "ALLOWED": "The action is within what the agent was asked to do.",
     "ACTION_FAILED": "The action could not be completed.",

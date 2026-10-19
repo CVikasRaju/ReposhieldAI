@@ -1,0 +1,24 @@
+FROM python:3.11-slim
+
+# Create app user (non-root)
+RUN useradd -m appuser
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy only the essentials (no workspace mount)
+COPY --chown=appuser:appuser backend/ /app/backend/
+COPY --chown=appuser:appwarehouse scripts/ /app/scripts/
+
+# Drop capabilities, read-only root
+USER appuser
+
+# Expose gateway ports
+EXPOSE 8000 8001
+
+# Default command
+CMD ["python", "-m", "backend.main"]

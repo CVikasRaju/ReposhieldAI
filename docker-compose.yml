@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  gateway:
+    build: .
+    container_name: reposhield-gateway
+    ports:
+      - "8000:8000"  # API dashboard
+      - "8001:8001"  # MCP agent
+    environment:
+      - RS_PROFILE=developer
+      - RS_APPROVER_TOKEN=integration-token
+      - RS_WORKSPACE=/app/workspace
+      - RS_DATA_DIR=/app/data
+    volumes:
+      - ./workspace:/app/workspace:ro
+      - ./business.db:/app/business.db:ro
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+  agent:
+    build:
+      context: .
+      dockerfile: sandbox/Dockerfile.agent
+    container_name: reposhield-agent
+    depends_on:
+      - gateway
+    environment:
+      - RS_MCP_PORT=8001
+      - RS_API_PORT=8000
+      - RS_APPROVER_TOKEN=integration-token
+    # No workspace mount - agent has read-only root filesystem
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
+
+  collector:
+    image: appropriate/curl:latest
+    container_name: reposhield-collector
+    ports:
+      - "9999:9999"
+    environment:
+      - LISTEN_PORT=9999
+    command: ["sh", "-c", "while true; do nc -l -p 9999 > /dev/null; done"]
+    restart: unless-stopped

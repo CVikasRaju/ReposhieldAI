@@ -11,7 +11,7 @@ from pathlib import Path
 
 import uvicorn
 
-from backend.api_app import create_api_app
+from backend.api_app import DashboardDeps, create_api_app
 from backend.config import Settings, get_settings
 from backend.connectors.command import CommandConnector
 from backend.connectors.filesystem import FilesystemConnector
@@ -110,7 +110,17 @@ def build_gateway(
         workspace_root=settings.workspace_abs,
     )
     mcp_app = create_mcp_app(pipeline)
-    api_app = create_api_app(settings)
+    api_app = create_api_app(
+        DashboardDeps(
+            settings=settings,
+            policy=policy,
+            audit=audit,
+            approvals=approvals,
+            sessions=sessions,
+            snapshots=snapshots,
+            bus=bus,
+        )
+    )
     return Gateway(
         settings=settings,
         pipeline=pipeline,
