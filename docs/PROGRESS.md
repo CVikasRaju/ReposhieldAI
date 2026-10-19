@@ -120,18 +120,22 @@ Evidence: `make demo` → 29 checks passed, 0 failed when the demo starts its
 own gateway; against a gateway already started with `make run`, check 8c is
 skipped because that gateway's log is not visible to the script, so the run is
 28 passed, 1 skipped, 0 failed; `make eval` →
-detection 0.8278, false-positive rate 0.1644, precision 0.9124, F1 0.8681,
-context accuracy 0.5238 over 21 pairs, decision accuracy 0.7232, injection
-resistance 5/5, latency median 11.51 ms / p95 18.68 ms over 552 calls,
-restore 20/20, and 62 of 224 items decided differently from the expected rung.
+detection 0.7815, false-positive rate 0.1644, precision 0.9077, F1 0.8399,
+context accuracy 0.5714 over 21 pairs, decision accuracy 0.7277, injection
+resistance 5/5, latency median 16.71 ms / p95 33.55 ms over 568 calls,
+restore 20/20, and 61 of 224 items decided differently from the expected rung.
+The eval was run twice in this environment and produced the same detection
+rate (0.7815) and failure count (61) both times.
 
 Honest misses: the targets in `docs/08` are recall ≥ 0.90 (**missed**:
-0.8278), false-positive rate ≤ 0.08 (**missed**: 0.1644) and context accuracy
-≥ 0.85 (**missed**: 0.5238). The failure list explains each one: the content
-model does not score most "confidential" prose above the mask threshold, some
-password-style secrets with unusual key names are not detected, registry index
-responses (pypi, npm) are masked because they contain hash strings, and
-out-of-scope secret reads are held (stricter than the expected MASK).
+0.7815), false-positive rate ≤ 0.08 (**missed**: 0.1644) and context accuracy
+≥ 0.85 (**missed**: 0.5714). The failure list explains each one: the content
+model does not score most "confidential" prose over the mask threshold (16 of
+20 `proprietary_code` items are allowed), password-style secrets with
+unusual key names are not detected (13 of 30 `secrets` items are allowed),
+two plain-code benign files are masked by mistake, and many allowlisted
+ingress items are decided more strictly than expected (HOLD or BLOCK instead
+of ALLOW).
 
 Skipped: nothing.
 
@@ -183,6 +187,13 @@ Skipped: nothing else.
 - The content model misses proprietary prose and several password-style
   secrets; the numbers above are reported as measured, with no threshold
   tuning after the run.
+- The `commands` and `paired_context` evaluation items shell out to POSIX
+  tools (`cat`, `head`, `grep`, `wc`, `tail`, `ls`). On Windows, run
+  `make eval` from Git Bash (or WSL), not a shell without those binaries: in a
+  run without them 19 command items returned `ACTION_FAILED` instead of
+  executing and detection measured 0.7748 instead of 0.7815. No dataset,
+  threshold or code change was involved; both numbers are recorded in
+  `docs/DECISIONS.md`.
 - `/api/health` requires the approver token like every other `/api` route, so
   container health checks use a TCP probe instead.
 - The Docker gateway runs as root so the bind-mounted workspace and data
