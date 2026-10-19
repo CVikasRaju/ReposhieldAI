@@ -1,69 +1,73 @@
-"""Attack 3: Injection to DROP TABLE.
+"""Attack 3: the agent is tricked into running DROP TABLE customers.
 
-Simulates an agent being tricked into running a destructive SQL command.
-Verifies that the command is blocked and a snapshot is taken.
+The destructive statement is stopped when the gateway blocks it and the
+customers table still exists with all of its rows afterwards.
 """
 
 from __future__ import annotations
 
 import asyncio
+import contextlib
+import shutil
+import sqlite3
 import sys
+import tempfile
 from pathlib import Path
 
-from ttools import make_gateway, running_server, call_tool, mcp_session
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from backend.tests.mcp_helpers import (  # noqa: E402
+    call_tool,
+    make_gateway,
+    mcp_session,
+    running_server,
+)
+
+
+def table_state(database: Path) -> tuple[bool, int]:
+    """Return (customers exists, row count)."""
+    if not database.is_file():
+        return False, 0
+    with contextlib.closing(sqlite3.connect(database)) as connection:
+        exists = connection.execute(
+            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='customers'"
+        ).fetchone()[0]
+        if not exists:
+            return False, 0
+        rows = connection.execute("SELECT COUNT(*) FROM customers").fetchone()[0]
+    return True, int(rows)
 
 
 async def main() -> int:
-    tmp_path = Path(tempfile.mkdtemp())
-    gateway = make_gateway(tmp_path)
-    
+    print("Attack 3: injection to DROP TABLE customers")
+    tmp = Path(tempfile.mkdtemp(prefix="attack03_"))
+    gateway = make_gateway(tmp)
+    database = gateway.settings.workspace_abs / "business.db"
+    before_exists, before_rows = table_state(database)
     try:
-        async with running_server(gateway.api_app) as api_base:
-            async with running_server(gateway.mcp_app) as mcp_base:
-                async with httpx.AsyncClient(
-                    base_url=api_base, timeout=10.0,
-                    headers={"X-Approver-Token": "integration-token"},
-                ) as client:
-                    async with mcp_session(mcp_base) as session:
-                        # Action: db_query with DROP TABLE
-                        result = await call_tool(session, "db_query", {
-                            "sql": "DROP TABLE customers"
-                        })
-                        event = result.get("event", {})
-                        decision = event.get("decision")
-                        approval = event.get("approval")
-                        snapshot = event.get("snapshot", {})
-                        
-                        print(f"Decision: {decision}")
-                        print(f"Approval: {approval}")
-                        print(f"Snapshot: {snapshot}")
-                        
-                        passed = True
-                        if decision != "HOLD":  # SQL DROP is held for approval
-                            print(f"FAIL: Expected HOLD, got {decision}")
-                            passed = False
-                        if approval != "approved":
-                            print(f"FAIL: Expected approved approval")
-                            passed = False
-                        if snapshot.get("ok") is not True:
-                            print(f"FAIL: Expected snapshot ok=True")
-                            passed = False
-                        
-                        if passed:
-                            print("Attack 3 PASSED: DROP TABLE blocked with approval")
-                        else:
-                            print("Attack 3 FAILED")
-                        
-                        return 0 if passed else 1
+        async with running_server(gateway.mcp_app) as mcp_base:
+            async with mcp_session(mcp_base, header="attack-3") as session:
+                result = await call_tool(
+                    session, "db_query", {"sql": "DROP TABLE customers"}
+                )
+
+        status = str(result.get("status", ""))
+        after_exists, after_rows = table_state(database)
+        stopped = status in {"blocked", "denied"} and after_exists and after_rows == before_rows
+        print(f"  status={status}")
+        print(f"  customers table: exists={before_exists} rows={before_rows} "
+              f"-> exists={after_exists} rows={after_rows}")
+        print(f"RESULT: {'stopped' if stopped else 'not stopped'}")
+        return 0 if stopped else 1
     finally:
         gateway.audit.close()
-        import shutil
-        try:
-            shutil.rmtree(tmp_path)
-        except Exception:
-            pass
+        shutil.rmtree(tmp, ignore_errors=True)
 
 
 if __name__ == "__main__":
-    import tempfile
-    sys.exit(asyncio.run(main()))
+    try:
+        sys.exit(asyncio.run(main()))
+    except KeyboardInterrupt:
+        sys.exit(130)
