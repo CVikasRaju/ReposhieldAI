@@ -1,125 +1,148 @@
-"""Keyword baseline: flags items as sensitive if they contain certain keywords."""
+"""Keyword baseline for the evaluation.
+
+Flags an item as sensitive when its content contains a naive keyword, maps
+that to BLOCK, and scores the result against the expected decision with the
+same metrics the real pipeline uses. This is the deliberately simple
+comparison column in eval/results/results.md.
+"""
 
 from __future__ import annotations
 
 import json
-from pathlib import Path
-
 import sys
+from pathlib import Path
 from typing import Any
 
-RNG = None  # not needed for baseline
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+RANK = {"ALLOW": 0, "MASK": 1, "HOLD": 2, "BLOCK": 3}
+
+KEYWORDS = [
+    "password",
+    "secret",
+    "token",
+    "api_key",
+    "apikey",
+    "private",
+    "ssn",
+    "credit",
+    "card",
+    ".env",
+    "national_id",
+    "salary",
+]
 
 
 def is_sensitive_keyword(content: str) -> bool:
-    """Return True if content contains any keyword that indicates sensitivity."""
-    keywords = [
-        "password", "secret", "token", "api_key", "apikey", "private",
-        "ssn", "credit", "card", ".env", "national_id", "salary",
-    ]
-    content_lower = content.lower()
-    return any(kw in content_lower for kw in keywords)
+    """Return True when the content contains a naive sensitivity keyword."""
+    lowered = content.lower()
+    return any(keyword in lowered for keyword in KEYWORDS)
+
+
+def load_items(dataset_path: Path) -> list[dict[str, Any]]:
+    items: list[dict[str, Any]] = []
+    with dataset_path.open(encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if line:
+                items.append(json.loads(line))
+    return items
 
 
 def run_baseline(dataset_path: Path) -> list[dict[str, Any]]:
-    """Run the keyword baseline on the dataset and return results."""
-    results = []
-    with open(dataset_path) as f:
-        for line in f:
-            item = json.loads(line)
-            content = item["content"]
-            sensitive = is_sensitive_keyword(content)
-            # The baseline decision is: BLOCK if sensitive, ALLOW otherwise
-            # but we map to the same decision format as RepoShield
-            decision = "BLOCK" if sensitive else "ALLOW"
-            results.append({
-                "id": item["id"],
-                "category": item["category"],
-                "expected_decision": item["expected_decision"],
+    """Score every dataset item with the keyword baseline."""
+    results: list[dict[str, Any]] = []
+    for item in load_items(dataset_path):
+        expected = str(item.get("expected_decision", "ALLOW"))
+        decision = "BLOCK" if is_sensitive_keyword(str(item.get("content", ""))) else "ALLOW"
+        results.append(
+            {
+                "id": item.get("id", ""),
+                "category": item.get("category", ""),
+                "expected_decision": expected,
                 "baseline_decision": decision,
-                "sensitive": item["sensitive"],
-                "correct": decision == item["expected_decision"],
-            })
+                "sensitive": expected != "ALLOW",
+                "pair_id": item.get("pair_id"),
+                "correct": decision == expected,
+            }
+        )
     return results
 
 
 def summarize(results: list[dict[str, Any]]) -> dict[str, Any]:
-    """Compute summary metrics for the baseline results."""
+    """Compute the same headline metrics the pipeline eval reports."""
     n = len(results)
     if n == 0:
         return {"n": 0}
 
-    # Detection rate: sensitive items where decision >= expected
-    sensitive_items = [r for r in results if r["sensitive"]]
-    benign_items = [r for r in results if not r["sensitive"]]
-    
-    # True positives (sensitive correctly caught)
-    tp = sum(1 for r in sensitive_items if r["baseline_decision"] == "BLOCK")
-    detection_rate = tp / len(sensitive_items) if sensitive_items else 0.0
-    
-    # False positives (benign incorrectly blocked)
-    fp = sum(1 for r in benign_items if r["baseline_decision"] == "BLOCK")
-    fpr = fp / len(benign_items) if benign_items else 0.0
-    
-    # Context accuracy: for paired items, both get expected decision
-    paired = [r for r in results if r["id"].startswith("pair-")]
-    context_acc = sum(1 for r in paired if r["correct"]) / len(paired) if paired else 0.0
-    
-    # Decision accuracy
-    da = sum(1 for r in results if r["correct"]) / n
-    
-    # Precision and F1
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
-    recall = tp / len(sensitive_items) if sensitive_items else 0.0
-    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
-    
+    sensitive_items = [item for item in results if item["sensitive"]]
+    benign_items = [item for item in results if not item["sensitive"]]
+
+    detected = [
+        item
+        for item in sensitive_items
+        if RANK.get(item["baseline_decision"], 0) >= RANK.get(item["expected_decision"], 0)
+    ]
+    detection_rate = len(detected) / len(sensitive_items) if sensitive_items else 0.0
+
+    false_positives = [item for item in benign_items if item["baseline_decision"] != "ALLOW"]
+    false_positive_rate = len(false_positives) / len(benign_items) if benign_items else 0.0
+
+    pairs: dict[str, list[dict[str, Any]]] = {}
+    for item in results:
+        if item.get("pair_id"):
+            pairs.setdefault(str(item["pair_id"]), []).append(item)
+    complete = [members for members in pairs.values() if len(members) == 2]
+    context_correct = [
+        members for members in complete if all(member["correct"] for member in members)
+    ]
+    context_accuracy = len(context_correct) / len(complete) if complete else 0.0
+
+    correct = sum(1 for item in results if item["correct"])
+    decision_accuracy = correct / n
+
+    tp = len(detected)
+    predicted_positive = [item for item in results if item["baseline_decision"] != "ALLOW"]
+    precision = (
+        sum(1 for item in predicted_positive if item["sensitive"]) / len(predicted_positive)
+        if predicted_positive
+        else 0.0
+    )
+    recall = detection_rate
+    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
+
     return {
         "n": n,
+        "detected": tp,
+        "false_positives": len(false_positives),
+        "n_sensitive": len(sensitive_items),
+        "n_benign": len(benign_items),
+        "n_pairs": len(complete),
         "detection_rate": round(detection_rate, 4),
-        "false_positive_rate": round(fpr, 4),
+        "false_positive_rate": round(false_positive_rate, 4),
         "precision": round(precision, 4),
         "recall": round(recall, 4),
         "f1": round(f1, 4),
-        "context_accuracy": round(context_acc, 4),
-        "decision_accuracy": round(da, 4),
+        "context_accuracy": round(context_accuracy, 4),
+        "decision_accuracy": round(decision_accuracy, 4),
     }
 
 
-def main() -> None:
-    dataset_path = Path("eval/dataset.jsonl")
-    results = run_baseline(dataset_path)
-    summary = summarize(results)
-    
-    # Write results
-    results_dir = Path("eval/results")
-    results_dir.mkdir(parents=True, exist_ok=True)
-    
-    with open(results_dir / "results.json", "w") as f:
-        json.dump({"summary": summary, "results": results}, f, indent=2)
-    
-    # Write markdown
-    lines = [
-        f"| Metric | Keyword baseline |",
-        "|---|---|",
-        f"| Detection rate | {summary['detection_rate']} |",
-        f"| False-positive rate | {summary['false_positive_rate']} |",
-        f"| Precision | {summary['precision']} |",
-        f"| F1 | {summary['f1']} |",
-        f"| Context accuracy (pairs) | {summary['context_accuracy']} |",
-        f"| Decision accuracy | {summary['decision_accuracy']} |",
-        f"| Injection resistance | n/a |",
-        f"| Latency median / p95 (ms) | n/a |",
-        f"| Restore correctness | n/a |",
-    ]
-    with open(results_dir / "results.md", "w") as f:
-        f.write("\n".join(lines))
-    
-    print("Keyword baseline complete.")
-    print(f"Processed {summary['n']} items")
-    print(f"Detection rate: {summary['detection_rate']}")
-    print(f"False-positive rate: {summary['false_positive_rate']}")
-    print(f"Decision accuracy: {summary['decision_accuracy']}")
+def main() -> int:
+    """Print the baseline summary; run_eval owns the results files."""
+    dataset_path = ROOT / "eval" / "dataset.jsonl"
+    summary = summarize(run_baseline(dataset_path))
+    print(f"Keyword baseline over {summary['n']} items")
+    print(f"  detection rate:        {summary['detection_rate']}")
+    print(f"  false-positive rate:   {summary['false_positive_rate']}")
+    print(f"  precision:             {summary['precision']}")
+    print(f"  f1:                    {summary['f1']}")
+    print(f"  context accuracy:      {summary['context_accuracy']}")
+    print(f"  decision accuracy:     {summary['decision_accuracy']}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

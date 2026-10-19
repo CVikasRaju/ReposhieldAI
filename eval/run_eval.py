@@ -497,6 +497,30 @@ def fmt(value: Any) -> str:
     return str(value)
 
 
+def mismatch_patterns(failures: list[dict[str, Any]]) -> list[tuple[str, int, str]]:
+    """Group failures by (expected, got) and describe what the difference means."""
+    groups: dict[tuple[str, str], int] = {}
+    for case in failures:
+        key = (case["expected"], case["got"])
+        groups[key] = groups.get(key, 0) + 1
+    patterns: list[tuple[str, int, str]] = []
+    for (expected, got), count in sorted(groups.items(), key=lambda item: -item[1]):
+        if RANK.get(got, 0) > RANK.get(expected, 0):
+            why = (
+                f"detected and decided more strictly than expected ({got} > {expected}); "
+                "the scoring placed it above the next threshold"
+            )
+        elif RANK.get(got, 0) < RANK.get(expected, 0):
+            why = (
+                f"not caught strongly enough ({got} < {expected}); the detectors and the "
+                "content model scored it below the expected threshold"
+            )
+        else:
+            why = "same severity but a different decision"
+        patterns.append((f"expected {expected}, got {got}", count, why))
+    return patterns
+
+
 def build_markdown(payload: dict[str, Any]) -> str:
     summary = payload["summary"]
     baseline = payload["baseline"]
@@ -585,6 +609,11 @@ def build_markdown(payload: dict[str, Any]) -> str:
                 f"| {case['id']} | {case['category']} | {case['expected']} | "
                 f"{case['got']} | {reasons} | {note} |"
             )
+
+    if failures:
+        lines.extend(["", "### Failure patterns", ""])
+        for label, count, why in mismatch_patterns(failures):
+            lines.append(f"- {count} items {label}: {why}.")
 
     lines.extend(
         [
