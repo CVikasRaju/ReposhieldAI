@@ -697,7 +697,7 @@ async def run(args: argparse.Namespace) -> int:
 
         print("\n=== Demo summary ===")
         print(f"  gateway:   {'external ' if gateway.external else 'in-process'} {gateway.api_base}")
-        print(f"  steps:     8 (7 agent steps + presenter verification)")
+        print("  steps:     8 (7 agent steps + presenter verification)")
         print(f"  results:   {len(tool_results)} tool calls")
         collector_entries = (
             sum(1 for line in collector_log.read_text(encoding="utf-8").splitlines() if line.strip())

@@ -1,115 +1,173 @@
 #!/usr/bin/env python3
-"""Isolation verification script (Phase 9).
+"""Isolation checks that run inside the agent container (docs/08 part D).
 
-Prints PASS or FAIL for each of the five isolation checks.
+Prints PASS or FAIL for each of the five documented checks and exits non-zero
+when any of them fails. This script deliberately imports no backend code: the
+agent image contains the MCP client dependencies and the demo agent only.
+
+Environment:
+    RS_GATEWAY_HOST  gateway hostname on agent_net (default: gateway)
+    RS_API_PORT      dashboard listener port (default: 8000)
+    RS_MCP_PORT      MCP listener port (default: 8001)
 """
 
-import sys
+from __future__ import annotations
+
+import asyncio
+import json
 import os
-import subprocess
-import requests
+import sys
+import urllib.error
+import urllib.request
+from pathlib import Path
+from typing import Any
 
-# Add the project root to the path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+GATEWAY_HOST = os.environ.get("RS_GATEWAY_HOST", "gateway")
+API_PORT = os.environ.get("RS_API_PORT", "8000")
+MCP_PORT = os.environ.get("RS_MCP_PORT", "8001")
 
-from backend.config import get_settings
+# Paths that would exist if the workspace or policy were mounted into the
+# agent container. None of them may be present.
+WORKSPACE_MARKERS = (
+    "/workspace",
+    "/app/workspace",
+    "/app/.aishield",
+    "/app/data/audit.db",
+)
+
+CONNECT_TIMEOUT = 3.0
+
+
+def _get(url: str) -> tuple[int, bytes]:
+    """Perform a GET and return (status, body); raises on network failure."""
+    request = urllib.request.Request(url, headers={"User-Agent": "verify-isolation"})
+    with urllib.request.urlopen(request, timeout=CONNECT_TIMEOUT) as response:
+        return int(response.status), response.read(4096)
 
 
 def check_workspace_not_mounted() -> bool:
-    """Check that workspace is not mounted inside the agent container."""
-    workspace = get_settings().workspace_abs
-    # In a real agent container, /app/workspace should not exist
-    # Here we just check it doesn't exist at the default path
-    if os.path.exists(str(workspace)):
-        print(f"FAIL: Workspace exists at {workspace}")
+    """The workspace, policy and data directory must not exist in this image."""
+    present = [path for path in WORKSPACE_MARKERS if Path(path).exists()]
+    if present:
+        print(f"FAIL: workspace markers present: {', '.join(present)}")
         return False
-    print("PASS: Workspace not mounted")
+    print("PASS: workspace, policy and data directory are not mounted")
     return True
 
 
 def check_no_internet() -> bool:
-    """Check that internet connectivity is blocked."""
+    """Any outbound HTTP connection must fail."""
     try:
-        response = requests.get("https://example.com", timeout=3)
-        print(f"FAIL: Internet is accessible (status {response.status_code})")
-        return False
-    except (requests.ConnectionError, requests.Timeout):
-        print("PASS: No internet connectivity")
+        status, _ = _get("https://example.com")
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        print(f"PASS: no internet connectivity ({type(exc).__name__})")
         return True
+    print(f"FAIL: internet is reachable (status {status})")
+    return False
 
 
 def check_no_collector() -> bool:
-    """Check that collector connection is blocked."""
+    """The exfiltration collector must be unreachable from agent_net."""
     try:
-        response = requests.get("http://collector.local:9999", timeout=3)
-        print(f"FAIL: Collector is accessible (status {response.status_code})")
-        return False
-    except (requests.ConnectionError, requests.Timeout):
-        print("PASS: Collector connection blocked")
+        status, _ = _get("http://collector.local:9999/upload")
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        print(f"PASS: collector unreachable ({type(exc).__name__})")
         return True
+    print(f"FAIL: collector answered with status {status}")
+    return False
 
 
 def check_api_needs_token() -> bool:
-    """Check that API routes require the approver token."""
+    """The dashboard API must answer 401 without the approver token."""
+    url = f"http://{GATEWAY_HOST}:{API_PORT}/api/events"
     try:
-        response = requests.get("http://localhost:8000/api/events", timeout=3)
-        if response.status_code == 401:
-            print("PASS: API requires approver token")
+        status, _ = _get(url)
+    except urllib.error.HTTPError as exc:
+        if exc.code == 401:
+            print("PASS: /api/events answers 401 without the approver token")
             return True
-        else:
-            print(f"FAIL: API returned status {response.status_code}, expected 401")
-            return False
-    except (requests.ConnectionError, requests.Timeout):
-        print("FAIL: Gateway not reachable")
+        print(f"FAIL: /api/events answered {exc.code}, expected 401")
         return False
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        print(f"FAIL: gateway API not reachable ({type(exc).__name__})")
+        return False
+    print(f"FAIL: /api/events answered {status} without a token, expected 401")
+    return False
 
 
-def check_gateway_reachable() -> bool:
-    """Check that the gateway MCP endpoint is reachable."""
+async def _mcp_list_directory() -> tuple[bool, str]:
     try:
-        response = requests.get("http://localhost:8001/mcp", timeout=3)
-        # The MCP listener should be up; check for reasonable response
-        print("PASS: Gateway MCP endpoint reachable")
-        return True
-    except (requests.ConnectionError, requests.Timeout):
-        print("FAIL: Gateway MCP endpoint not reachable")
-        return False
+        import httpx
+        from mcp import ClientSession
+        from mcp.client.streamable_http import streamable_http_client
+    except ImportError as exc:  # pragma: no cover - image without the SDK
+        return False, f"MCP SDK not installed ({exc})"
+
+    url = f"http://{GATEWAY_HOST}:{MCP_PORT}/mcp"
+    try:
+        async with httpx.AsyncClient(
+            headers={"X-RepoShield-Session": "isolation-check"}, timeout=30.0
+        ) as client:
+            async with streamable_http_client(url, http_client=client) as (
+                read,
+                write,
+                _get_session_id,
+            ):
+                async with ClientSession(read, write) as session:
+                    await session.initialize()
+                    tools = await session.list_tools()
+                    names = [tool.name for tool in tools.tools]
+                    if "list_directory" not in names:
+                        return False, f"list_directory missing from {names}"
+                    result = await session.call_tool("list_directory", {"path": "."})
+                    body: dict[str, Any] | None = None
+                    if result.structuredContent is not None:
+                        body = result.structuredContent
+                    elif result.content:
+                        body = json.loads(result.content[0].text)
+                    status = (body or {}).get("status")
+                    if status in {"ok", "masked"}:
+                        return True, f"list_directory answered status={status}"
+                    return False, f"list_directory answered {body}"
+    except Exception as exc:  # noqa: BLE001 - report any transport failure
+        return False, f"MCP call failed: {type(exc).__name__}: {exc}"
+
+
+def check_mcp_works() -> bool:
+    """The MCP listener must serve the tools, including list_directory."""
+    ok, detail = asyncio.run(_mcp_list_directory())
+    print(f"{'PASS' if ok else 'FAIL'}: {detail}")
+    return ok
+
+
+CHECKS: tuple[tuple[str, Any], ...] = (
+    ("workspace not mounted", check_workspace_not_mounted),
+    ("no internet", check_no_internet),
+    ("no collector", check_no_collector),
+    ("API needs approver token", check_api_needs_token),
+    ("MCP list_directory works", check_mcp_works),
+)
 
 
 def main() -> int:
-    """Run all isolation checks and print results."""
-    checks = [
-        ("Workspace not mounted", check_workspace_not_mounted),
-        ("No internet", check_no_internet),
-        ("No collector", check_no_collector),
-        ("API needs token", check_api_needs_token),
-        ("Gateway reachable", check_gateway_reachable),
-    ]
-    
-    results = []
-    for name, check_func in checks:
+    """Run the five documented isolation checks."""
+    results: list[tuple[str, bool]] = []
+    for name, check in CHECKS:
+        print(f"--- {name}")
         try:
-            result = check_func()
-            results.append((name, result))
-        except Exception as e:
-            print(f"ERROR: {name} - {e}")
+            results.append((name, bool(check())))
+        except Exception as exc:  # noqa: BLE001 - a crashed check is a failure
+            print(f"ERROR: {name}: {type(exc).__name__}: {exc}")
             results.append((name, False))
-    
-    # Print summary
-    print("\n--- Isolation Check Summary ---")
-    passed = sum(1 for _, r in results if r)
-    total = len(results)
-    print(f"{passed}/{total} checks passed")
-    
-    if passed == total:
-        print("ALL CHECKS PASSED")
-        return 0
-    else:
-        print("SOME CHECKS FAILED")
-        for name, result in results:
-            if not result:
-                print(f"  - {name}: FAILED")
+
+    passed = sum(1 for _, ok in results if ok)
+    print(f"\n{passed}/{len(results)} isolation checks passed")
+    failed = [name for name, ok in results if not ok]
+    if failed:
+        print("FAILED: " + "; ".join(failed))
         return 1
+    print("ALL CHECKS PASSED")
+    return 0
 
 
 if __name__ == "__main__":

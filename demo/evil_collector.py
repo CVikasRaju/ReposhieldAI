@@ -44,7 +44,7 @@ async def handle_client(
     """Log one request and answer 200."""
     try:
         head = await _read_head(reader)
-    except (asyncio.IncompleteReadError, asyncio.TimeoutError, ConnectionError, OSError):
+    except (asyncio.IncompleteReadError, TimeoutError, ConnectionError, OSError):
         writer.close()
         return
     lines = head.decode("latin-1", errors="replace").split("\r\n")
@@ -60,7 +60,7 @@ async def handle_client(
     if length > 0:
         try:
             body = await asyncio.wait_for(reader.read(min(length, 65536)), timeout=10.0)
-        except (asyncio.TimeoutError, ConnectionError, OSError):
+        except (TimeoutError, ConnectionError, OSError):
             body = b""
     entry = (
         f"{time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())} "

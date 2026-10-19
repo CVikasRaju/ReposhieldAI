@@ -147,7 +147,7 @@ class SimulatedAgent:
         self._session: ClientSession | None = None
         self.outcomes: dict[int, StepOutcome] = {}
 
-    async def __aenter__(self) -> "SimulatedAgent":
+    async def __aenter__(self) -> SimulatedAgent:
         self._http = httpx.AsyncClient(
             headers={"X-RepoShield-Session": self.session_header}, timeout=120.0
         )
