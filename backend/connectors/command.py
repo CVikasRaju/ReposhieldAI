@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import os
 import shlex
+import shutil
 import subprocess
+import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 from backend.connectors.filesystem import PathEscapeError, resolve_in_workspace
 from backend.core.models import (
@@ -151,18 +154,55 @@ class CommandConnector:
             return ExecResult(ok=True, content=None)
         tokens = shlex.split(prepared.meta.get("command", ""))
         try:
-            completed = subprocess.run(
-                tokens,
-                cwd=str(self.workspace),
-                env={"PATH": os.environ.get("PATH", ""), "HOME": "/tmp"},
-                timeout=self.policy.commands.timeout_seconds,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                shell=False,
-                check=False,
-            )
+            try:
+                completed = subprocess.run(
+                    tokens,
+                    cwd=str(self.workspace),
+                    env={"PATH": os.environ.get("PATH", ""), "HOME": "/tmp"},
+                    timeout=self.policy.commands.timeout_seconds,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    shell=False,
+                    check=False,
+                )
+            except FileNotFoundError as exc:
+                if sys.platform == "win32" and tokens:
+                    first = tokens[0].lower()
+                    if first == "cat" and len(tokens) > 1:
+                        out_parts = []
+                        retcode = 0
+                        for arg in tokens[1:]:
+                            if arg.startswith("-"):
+                                continue
+                            target_file = (self.workspace / arg).resolve()
+                            if target_file.is_file():
+                                out_parts.append(target_file.read_text(encoding="utf-8", errors="replace"))
+                            else:
+                                out_parts.append(f"cat: {arg}: No such file or directory\n")
+                                retcode = 1
+                        completed = SimpleNamespace(stdout="".join(out_parts), stderr="", returncode=retcode)
+                    elif first == "rm" and len(tokens) > 1:
+                        out_parts = []
+                        retcode = 0
+                        for arg in tokens[1:]:
+                            if arg.startswith("-"):
+                                continue
+                            target_path = (self.workspace / arg).resolve()
+                            if target_path.exists():
+                                if target_path.is_dir():
+                                    shutil.rmtree(target_path, ignore_errors=True)
+                                else:
+                                    target_path.unlink(missing_ok=True)
+                            else:
+                                out_parts.append(f"rm: {arg}: No such file or directory\n")
+                                retcode = 1
+                        completed = SimpleNamespace(stdout="".join(out_parts), stderr="", returncode=retcode)
+                    else:
+                        raise exc
+                else:
+                    raise exc
         except subprocess.TimeoutExpired as exc:
             raise ActionError(
                 f"Command timed out after {self.policy.commands.timeout_seconds} seconds."
