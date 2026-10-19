@@ -1,19 +1,52 @@
-"""Process watchdog for bypass attempts (Phase 9)."""
+"""Process watchdog for bypass attempts (Phase 9, optional C11).
 
-import os
-import subprocess
+This is a best-effort detection layer for local mode. Container isolation is
+enforced by docker-compose, not by this module, and the gateway does not start
+it automatically.
+"""
+
 import uuid
 from datetime import UTC, datetime
 from typing import Any
 
+import psutil
+
 from backend.core.audit import AuditLog
-from backend.core.models import Decision, EventRecord, FinalOutcome, ReasonCode
+from backend.core.models import (
+    ApprovalKind,
+    ConnectorName,
+    Decision,
+    EventRecord,
+    FinalOutcome,
+    SignalScores,
+)
+from backend.core.reasons import ReasonCode
 from backend.core.sessions import SessionManager
 
+SHELL_NAMES = {"sh", "bash", "zsh", "cmd", "cmd.exe", "powershell", "powershell.exe", "pwsh"}
+NETWORK_NAMES = {"curl", "wget", "nc", "ncat", "ssh", "scp", "socat"}
 
-def utc_now() -> float:
-    """Return current UTC timestamp in seconds."""
-    return datetime.now(UTC).timestamp()
+
+def utc_now() -> str:
+    """Return the current UTC timestamp in the ledger's ISO format."""
+    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+
+
+def suspicious_children(pid: int) -> list[str]:
+    """Return child process names that look like shell or network bypasses."""
+    try:
+        parent = psutil.Process(pid)
+    except (psutil.NoSuchProcess, psutil.AccessDenied):
+        return []
+    hits: list[str] = []
+    for child in parent.children(recursive=True):
+        try:
+            name = child.name().lower()
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+        if name in SHELL_NAMES or name in NETWORK_NAMES:
+            hits.append(name)
+    return hits
 
 
 class ProcessMonitor:
@@ -25,35 +58,19 @@ class ProcessMonitor:
         self.bus = bus
         self.watchdog_event_id: str | None = None
 
-    async def start_watching(self, session_id: str) -> None:
-        """Start monitoring the process group for the given session."""
-        try:
-            session = await self.sessions.get(session_id)
-            if session is None:
-                return
-
-            # Set up a handler to monitor subprocesses
-            # This is a best-effort monitor; true container-level isolation
-            # is handled by Docker/Kubernetes
-            pid = os.getpid()
-
-            # Check for any sh or curl children
-            try:
-                result = subprocess.run(
-                    ["pgrep", "-P", str(pid), "sh", "curl"],
-                    capture_output=True, text=True, timeout=5
-                )
-                if result.stdout.strip():
-                    # Watchdog alert triggered
-                    await self._raise_watchdog_alert(
-                        session_id,
-                        "spawned sh or curl child process",
-                        ReasonCode.WATCHDOG_ALERT
-                    )
-            except (subprocess.TimeoutExpired, FileNotFoundError):
-                pass  # pgrep not available or no children
-        except Exception:
-            pass  # Fail silently
+    async def start_watching(self, session_id: str, pid: int | None = None) -> None:
+        """Check one process tree for shell or network children and log a hit."""
+        session = await self.sessions.get(session_id)
+        if session is None:
+            return
+        watched = pid if pid is not None else psutil.Process().pid
+        hits = suspicious_children(watched)
+        if hits:
+            await self._raise_watchdog_alert(
+                session_id,
+                f"spawned disallowed child processes: {', '.join(sorted(set(hits)))}",
+                ReasonCode.WATCHDOG_ALERT.value,
+            )
 
     async def _raise_watchdog_alert(
         self,
@@ -66,15 +83,15 @@ class ProcessMonitor:
             id=f"evt_{uuid.uuid4().hex[:12]}",
             session_id=session_id,
             ts=utc_now(),
-            connector=("system",),
+            connector=ConnectorName.SYSTEM,
             action="watchdog_alert",
             target="session",
             task_context=None,
             risk_tier=5,
-            scores=(),
+            scores=SignalScores(),
             decision=Decision.BLOCK,
             final_outcome=FinalOutcome.BLOCKED,
-            approval=("auto",),
+            approval=ApprovalKind.AUTO,
             reason_codes=[reason_code],
             reason_text=reason_text,
             detections=[],
@@ -83,36 +100,6 @@ class ProcessMonitor:
             delta_sha256=None,
             latency_ms=0.0,
         )
-        try:
-            logged = await self.audit.append_event(event)
-            await self.bus.publish("event.created", {"event": logged.model_dump(mode="json")})
-            self.watchdog_event_id = logged.id
-        except Exception:
-            pass
-
-
-def watchdog_decorator(func):
-    """Decorator to wrap test functions with watchdog monitoring."""
-    async def wrapper(*args, **kwargs):
-        from backend.core.audit import AuditLog
-        from backend.core.events import EventBus
-        from backend.core.sessions import SessionManager
-
-        audit = AuditLog(":memory:")
-        sessions = SessionManager()
-        bus = EventBus()
-        monitor = ProcessMonitor(audit, sessions, bus)
-
-        # Run the decorated function
-        try:
-            result = await func(*args, **kwargs)
-            # Check for watchdog alerts after the function completes
-            await monitor.start_watching(kwargs.get("session_id", "default"))
-            return result
-        except Exception:
-            # Log any watchdog events that were raised
-            if monitor.watchdog_event_id:
-                pass  # Event already logged
-            raise
-
-    return wrapper
+        logged = await self.audit.append_event(event)
+        await self.bus.publish("event.created", {"event": logged.model_dump(mode="json")})
+        self.watchdog_event_id = logged.id

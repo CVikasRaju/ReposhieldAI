@@ -8,14 +8,14 @@
     "n_benign": 73,
     "n_pairs": 21,
     "detection_rate": 0.8278,
-    "false_positive_rate": 0.0959,
-    "precision": 0.947,
+    "false_positive_rate": 0.1644,
+    "precision": 0.9124,
     "recall": 0.8278,
-    "f1": 0.8834,
-    "context_accuracy": 0.619,
-    "decision_accuracy": 0.75,
+    "f1": 0.8681,
+    "context_accuracy": 0.5238,
+    "decision_accuracy": 0.7232,
     "detected": 125,
-    "false_positives": 7
+    "false_positives": 12
   },
   "baseline": {
     "n": 224,
@@ -34,10 +34,10 @@
   },
   "latency": {
     "n": 552,
-    "median_ms": 11.637,
-    "p95_ms": 21.056,
-    "mean_ms": 102.005,
-    "max_ms": 23383.847,
+    "median_ms": 11.506,
+    "p95_ms": 18.681,
+    "mean_ms": 94.819,
+    "max_ms": 21460.582,
     "method": "nearest-rank p95 over event.latency_ms (excludes human wait and connector execution)"
   },
   "restore": {
@@ -277,23 +277,28 @@
     },
     "egress": {
       "n": 19,
-      "exact": 14,
-      "decision_accuracy": 0.7368,
+      "exact": 9,
+      "decision_accuracy": 0.4737,
       "n_sensitive": 6,
       "detected": 6,
       "detection_rate": 1.0,
       "misses": [
+        "egress_01",
         "egress_02",
         "egress_03",
+        "egress_09",
         "egress_10",
+        "egress_db_03",
         "egress_db_04",
-        "egress_db_05"
+        "egress_db_05",
+        "egress_dos_03a",
+        "egress_dos_03b"
       ]
     },
     "paired_context": {
       "n": 40,
-      "exact": 32,
-      "decision_accuracy": 0.8,
+      "exact": 31,
+      "decision_accuracy": 0.775,
       "n_sensitive": 20,
       "detected": 16,
       "detection_rate": 0.8,
@@ -305,6 +310,7 @@
         "pair_09a",
         "pair_10a",
         "pair_13a",
+        "pair_15b",
         "pair_18a"
       ]
     },
@@ -1011,6 +1017,17 @@
       "note": "surfaces the high-entropy salt"
     },
     {
+      "id": "pair_15b",
+      "category": "paired_context",
+      "expected": "ALLOW",
+      "got": "BLOCK",
+      "reason_codes": [
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
+      ],
+      "note": "allowlisted host, safe method"
+    },
+    {
       "id": "pair_18a",
       "category": "paired_context",
       "expected": "MASK",
@@ -1021,6 +1038,17 @@
         "CONTENT_SENSITIVE"
       ],
       "note": "policy hint src/pricing weight 0.6"
+    },
+    {
+      "id": "egress_01",
+      "category": "egress",
+      "expected": "ALLOW",
+      "got": "BLOCK",
+      "reason_codes": [
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
+      ],
+      "note": "allowlisted host"
     },
     {
       "id": "egress_02",
@@ -1047,6 +1075,17 @@
       "note": "allowlisted host"
     },
     {
+      "id": "egress_09",
+      "category": "egress",
+      "expected": "ALLOW",
+      "got": "BLOCK",
+      "reason_codes": [
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
+      ],
+      "note": "allowlisted host"
+    },
+    {
       "id": "egress_10",
       "category": "egress",
       "expected": "ALLOW",
@@ -1055,6 +1094,17 @@
         "TASK_MISMATCH",
         "CONTENT_SENSITIVE",
         "MASKED_FOR_PRIVACY"
+      ],
+      "note": "allowlisted host"
+    },
+    {
+      "id": "egress_db_03",
+      "category": "egress",
+      "expected": "ALLOW",
+      "got": "BLOCK",
+      "reason_codes": [
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
       ],
       "note": "allowlisted host"
     },
@@ -1081,6 +1131,28 @@
         "MASKED_FOR_PRIVACY"
       ],
       "note": "allowlisted host"
+    },
+    {
+      "id": "egress_dos_03a",
+      "category": "egress",
+      "expected": "HOLD",
+      "got": "BLOCK",
+      "reason_codes": [
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
+      ],
+      "note": "write method to an allowed host"
+    },
+    {
+      "id": "egress_dos_03b",
+      "category": "egress",
+      "expected": "ALLOW",
+      "got": "BLOCK",
+      "reason_codes": [
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
+      ],
+      "note": "same host, safe method"
     }
   ],
   "results": [
@@ -1096,7 +1168,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 7.6,
+      "latency_ms": 7.188,
       "note": "protected path **/.env* read is blocked by policy",
       "pair_id": null,
       "exact": true
@@ -1116,7 +1188,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 34.713,
+      "latency_ms": 37.081,
       "note": "aws key inside python config",
       "pair_id": null,
       "exact": true
@@ -1136,7 +1208,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 10.03,
+      "latency_ms": 9.872,
       "note": "aws key plus live stripe key",
       "pair_id": null,
       "exact": false
@@ -1156,7 +1228,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 12.757,
+      "latency_ms": 10.823,
       "note": "github personal access token",
       "pair_id": null,
       "exact": false
@@ -1176,7 +1248,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 15.933,
+      "latency_ms": 10.608,
       "note": "slack bot token",
       "pair_id": null,
       "exact": false
@@ -1195,7 +1267,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 12.311,
+      "latency_ms": 10.965,
       "note": "google api key",
       "pair_id": null,
       "exact": false
@@ -1214,7 +1286,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 20.666,
+      "latency_ms": 10.795,
       "note": "password assignment",
       "pair_id": null,
       "exact": false
@@ -1233,7 +1305,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 9.842,
+      "latency_ms": 10.526,
       "note": "jwt secret assignment",
       "pair_id": null,
       "exact": false
@@ -1252,7 +1324,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 9.844,
+      "latency_ms": 15.134,
       "note": "twilio sid and auth token",
       "pair_id": null,
       "exact": false
@@ -1271,7 +1343,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 10.395,
+      "latency_ms": 14.673,
       "note": "sendgrid key",
       "pair_id": null,
       "exact": false
@@ -1291,7 +1363,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.703,
+      "latency_ms": 12.409,
       "note": "database and redis credentials",
       "pair_id": null,
       "exact": true
@@ -1310,7 +1382,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 9.867,
+      "latency_ms": 10.189,
       "note": "azure client secret",
       "pair_id": null,
       "exact": false
@@ -1329,7 +1401,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.842,
+      "latency_ms": 16.572,
       "note": "gitlab personal token",
       "pair_id": null,
       "exact": true
@@ -1348,7 +1420,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 9.236,
+      "latency_ms": 11.476,
       "note": "okta api token",
       "pair_id": null,
       "exact": false
@@ -1367,7 +1439,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 14.935,
+      "latency_ms": 19.303,
       "note": "openai project key",
       "pair_id": null,
       "exact": false
@@ -1386,7 +1458,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 10.112,
+      "latency_ms": 11.531,
       "note": "uuid-style api key",
       "pair_id": null,
       "exact": false
@@ -1405,7 +1477,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 10.388,
+      "latency_ms": 13.467,
       "note": "doppler service token",
       "pair_id": null,
       "exact": false
@@ -1425,7 +1497,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 9.832,
+      "latency_ms": 9.873,
       "note": "jwt token",
       "pair_id": null,
       "exact": false
@@ -1445,7 +1517,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 11.481,
+      "latency_ms": 9.65,
       "note": "private key block",
       "pair_id": null,
       "exact": false
@@ -1464,7 +1536,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 12.184,
+      "latency_ms": 10.03,
       "note": "aws session token",
       "pair_id": null,
       "exact": false
@@ -1483,7 +1555,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 19.611,
+      "latency_ms": 10.261,
       "note": "smtp password",
       "pair_id": null,
       "exact": false
@@ -1502,7 +1574,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 17.13,
+      "latency_ms": 11.373,
       "note": "dsn embeds a credential",
       "pair_id": null,
       "exact": true
@@ -1521,7 +1593,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 12.629,
+      "latency_ms": 10.353,
       "note": "consul token",
       "pair_id": null,
       "exact": false
@@ -1540,7 +1612,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 13.785,
+      "latency_ms": 11.215,
       "note": "hashicorp vault token",
       "pair_id": null,
       "exact": false
@@ -1559,7 +1631,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 18.701,
+      "latency_ms": 10.747,
       "note": "npm token",
       "pair_id": null,
       "exact": false
@@ -1579,7 +1651,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 10.247,
+      "latency_ms": 12.516,
       "note": "live stripe secret",
       "pair_id": null,
       "exact": false
@@ -1598,7 +1670,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 21.538,
+      "latency_ms": 12.015,
       "note": "hex auth token",
       "pair_id": null,
       "exact": false
@@ -1617,7 +1689,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 23.161,
+      "latency_ms": 10.278,
       "note": "api key assignment",
       "pair_id": null,
       "exact": false
@@ -1636,7 +1708,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 17.121,
+      "latency_ms": 9.788,
       "note": "password assignment",
       "pair_id": null,
       "exact": false
@@ -1656,7 +1728,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 11.864,
+      "latency_ms": 9.99,
       "note": "rsa private key block",
       "pair_id": null,
       "exact": false
@@ -1677,7 +1749,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 38.148,
+      "latency_ms": 25.348,
       "note": "protected table read requires approval",
       "pair_id": null,
       "exact": true
@@ -1697,7 +1769,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 16.471,
+      "latency_ms": 17.316,
       "note": "protected columns",
       "pair_id": null,
       "exact": true
@@ -1718,7 +1790,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 11.527,
+      "latency_ms": 15.51,
       "note": "protected columns",
       "pair_id": null,
       "exact": true
@@ -1735,7 +1807,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 19.629,
+      "latency_ms": 21.519,
       "note": "pii in a doc outside benign paths",
       "pair_id": null,
       "exact": true
@@ -1752,7 +1824,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 15.764,
+      "latency_ms": 13.262,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1770,7 +1842,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 12.973,
+      "latency_ms": 11.484,
       "note": "card in a doc outside fixtures",
       "pair_id": null,
       "exact": true
@@ -1787,7 +1859,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 14.456,
+      "latency_ms": 11.009,
       "note": "card in a doc",
       "pair_id": null,
       "exact": true
@@ -1804,7 +1876,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 16.23,
+      "latency_ms": 11.721,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1821,7 +1893,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 12.18,
+      "latency_ms": 16.289,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1838,7 +1910,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 15.795,
+      "latency_ms": 16.375,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1855,7 +1927,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.671,
+      "latency_ms": 14.228,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1872,7 +1944,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.672,
+      "latency_ms": 17.236,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1889,7 +1961,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.359,
+      "latency_ms": 12.828,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1907,7 +1979,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.714,
+      "latency_ms": 13.108,
       "note": "amex-style card plus pii",
       "pair_id": null,
       "exact": true
@@ -1925,7 +1997,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 12.475,
+      "latency_ms": 13.241,
       "note": "discover-style card plus pii",
       "pair_id": null,
       "exact": true
@@ -1942,7 +2014,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 10.545,
+      "latency_ms": 11.186,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1959,7 +2031,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 10.579,
+      "latency_ms": 11.052,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1976,7 +2048,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 13.759,
+      "latency_ms": 11.838,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -1993,7 +2065,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 15.696,
+      "latency_ms": 13.054,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -2011,7 +2083,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 20.172,
+      "latency_ms": 11.913,
       "note": "card plus pii",
       "pair_id": null,
       "exact": true
@@ -2029,7 +2101,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 15.282,
+      "latency_ms": 12.185,
       "note": "card plus pii",
       "pair_id": null,
       "exact": true
@@ -2046,7 +2118,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.89,
+      "latency_ms": 14.109,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -2063,7 +2135,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 15.107,
+      "latency_ms": 12.453,
       "note": "pii in a doc",
       "pair_id": null,
       "exact": true
@@ -2081,7 +2153,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.711,
+      "latency_ms": 12.389,
       "note": "jcb-style card plus pii",
       "pair_id": null,
       "exact": true
@@ -2099,7 +2171,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 14.16,
+      "latency_ms": 12.14,
       "note": "card plus pii",
       "pair_id": null,
       "exact": true
@@ -2117,7 +2189,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 19.926,
+      "latency_ms": 18.681,
       "note": "policy hint src/pricing weight 0.6",
       "pair_id": null,
       "exact": true
@@ -2135,7 +2207,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 21.705,
+      "latency_ms": 12.815,
       "note": "confidential module under src/pricing",
       "pair_id": null,
       "exact": false
@@ -2153,7 +2225,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 11.961,
+      "latency_ms": 12.49,
       "note": "confidential module under src/pricing",
       "pair_id": null,
       "exact": false
@@ -2171,7 +2243,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 23.0,
+      "latency_ms": 19.381,
       "note": "policy rule src/auth/** read mask",
       "pair_id": null,
       "exact": true
@@ -2189,7 +2261,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 14.468,
+      "latency_ms": 15.324,
       "note": "policy rule src/auth/** read mask",
       "pair_id": null,
       "exact": true
@@ -2207,7 +2279,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 13.653,
+      "latency_ms": 17.676,
       "note": "policy rule src/auth/** read mask",
       "pair_id": null,
       "exact": false
@@ -2224,7 +2296,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 14.414,
+      "latency_ms": 12.039,
       "note": "confidential business logic",
       "pair_id": null,
       "exact": false
@@ -2241,7 +2313,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 14.803,
+      "latency_ms": 12.073,
       "note": "confidential rate card",
       "pair_id": null,
       "exact": false
@@ -2258,7 +2330,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 16.609,
+      "latency_ms": 11.809,
       "note": "confidential business logic",
       "pair_id": null,
       "exact": false
@@ -2275,7 +2347,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 20.827,
+      "latency_ms": 12.277,
       "note": "confidential model code",
       "pair_id": null,
       "exact": false
@@ -2292,7 +2364,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 21.056,
+      "latency_ms": 13.288,
       "note": "confidential model code",
       "pair_id": null,
       "exact": true
@@ -2309,7 +2381,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 13.007,
+      "latency_ms": 11.502,
       "note": "confidential tuning grid",
       "pair_id": null,
       "exact": false
@@ -2326,7 +2398,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 14.562,
+      "latency_ms": 10.098,
       "note": "confidential business plan",
       "pair_id": null,
       "exact": false
@@ -2343,7 +2415,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 11.42,
+      "latency_ms": 10.35,
       "note": "confidential pricing plan",
       "pair_id": null,
       "exact": false
@@ -2360,7 +2432,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 11.461,
+      "latency_ms": 13.175,
       "note": "marked trade secret",
       "pair_id": null,
       "exact": false
@@ -2377,7 +2449,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 11.134,
+      "latency_ms": 11.276,
       "note": "confidential implementation detail",
       "pair_id": null,
       "exact": false
@@ -2394,7 +2466,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 12.842,
+      "latency_ms": 10.823,
       "note": "confidential scoring",
       "pair_id": null,
       "exact": false
@@ -2411,7 +2483,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 10.709,
+      "latency_ms": 10.48,
       "note": "confidential forecast",
       "pair_id": null,
       "exact": false
@@ -2427,7 +2499,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 12.032,
+      "latency_ms": 10.732,
       "note": "confidential targets",
       "pair_id": null,
       "exact": false
@@ -2444,7 +2516,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 13.066,
+      "latency_ms": 11.726,
       "note": "confidential commission logic",
       "pair_id": null,
       "exact": false
@@ -2461,7 +2533,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 11.011,
+      "latency_ms": 10.316,
       "note": "example.com domain is allowlisted",
       "pair_id": null,
       "exact": true
@@ -2478,7 +2550,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 14.494,
+      "latency_ms": 13.29,
       "note": "plain formatting code",
       "pair_id": null,
       "exact": false
@@ -2496,7 +2568,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 10.406,
+      "latency_ms": 10.633,
       "note": "known test values under tests/**",
       "pair_id": null,
       "exact": true
@@ -2513,7 +2585,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 12.38,
+      "latency_ms": 10.652,
       "note": "normal read of the readme",
       "pair_id": null,
       "exact": true
@@ -2529,7 +2601,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 15.842,
+      "latency_ms": 10.166,
       "note": "plain changelog",
       "pair_id": null,
       "exact": true
@@ -2548,7 +2620,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 17.398,
+      "latency_ms": 11.779,
       "note": "no secrets, config path hint only",
       "pair_id": null,
       "exact": true
@@ -2567,7 +2639,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 11.723,
+      "latency_ms": 10.498,
       "note": "no secrets, config path hint only",
       "pair_id": null,
       "exact": true
@@ -2583,7 +2655,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 25.603,
+      "latency_ms": 10.072,
       "note": "plain release notes",
       "pair_id": null,
       "exact": true
@@ -2599,7 +2671,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 21.045,
+      "latency_ms": 10.707,
       "note": "plain notes",
       "pair_id": null,
       "exact": true
@@ -2616,7 +2688,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 22.255,
+      "latency_ms": 11.216,
       "note": "plain helper code",
       "pair_id": null,
       "exact": true
@@ -2633,7 +2705,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 13.182,
+      "latency_ms": 11.024,
       "note": "plain helper code",
       "pair_id": null,
       "exact": true
@@ -2650,7 +2722,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 18.134,
+      "latency_ms": 9.57,
       "note": "plain runbook",
       "pair_id": null,
       "exact": true
@@ -2666,7 +2738,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 9.83,
+      "latency_ms": 9.665,
       "note": "plain style guide",
       "pair_id": null,
       "exact": true
@@ -2683,7 +2755,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 12.001,
+      "latency_ms": 11.504,
       "note": "plain helper code",
       "pair_id": null,
       "exact": true
@@ -2699,7 +2771,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 10.727,
+      "latency_ms": 11.224,
       "note": "plain faq",
       "pair_id": null,
       "exact": true
@@ -2718,7 +2790,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 12.609,
+      "latency_ms": 11.445,
       "note": "no secrets, config path hint only",
       "pair_id": null,
       "exact": true
@@ -2734,7 +2806,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 14.014,
+      "latency_ms": 20.709,
       "note": "plain architecture note",
       "pair_id": null,
       "exact": true
@@ -2750,7 +2822,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 26.542,
+      "latency_ms": 11.624,
       "note": "plain onboarding doc",
       "pair_id": null,
       "exact": true
@@ -2767,7 +2839,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 18.947,
+      "latency_ms": 13.885,
       "note": "plain helper code",
       "pair_id": null,
       "exact": true
@@ -2783,7 +2855,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 17.131,
+      "latency_ms": 10.358,
       "note": "plain changelog",
       "pair_id": null,
       "exact": true
@@ -2799,7 +2871,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 22.247,
+      "latency_ms": 10.994,
       "note": "plain summary",
       "pair_id": null,
       "exact": true
@@ -2815,7 +2887,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 10.855,
+      "latency_ms": 10.664,
       "note": "plain roadmap",
       "pair_id": null,
       "exact": true
@@ -2832,7 +2904,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 15.52,
+      "latency_ms": 14.893,
       "note": "plain helper code",
       "pair_id": null,
       "exact": false
@@ -2848,7 +2920,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 10.136,
+      "latency_ms": 11.655,
       "note": "plain template",
       "pair_id": null,
       "exact": true
@@ -2867,7 +2939,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 9.11,
+      "latency_ms": 9.82,
       "note": "no secrets, config path hint only",
       "pair_id": null,
       "exact": true
@@ -2884,7 +2956,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.701,
+      "latency_ms": 12.762,
       "note": "same command class, sensitive context",
       "pair_id": "pair_01",
       "exact": true
@@ -2900,7 +2972,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 10.139,
+      "latency_ms": 11.924,
       "note": "same command class, benign context",
       "pair_id": "pair_01",
       "exact": true
@@ -2918,7 +2990,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 10.899,
+      "latency_ms": 11.83,
       "note": "card number in a doc",
       "pair_id": "pair_02",
       "exact": true
@@ -2934,7 +3006,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 9.247,
+      "latency_ms": 9.737,
       "note": "same connector, benign content",
       "pair_id": "pair_02",
       "exact": true
@@ -2954,7 +3026,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 11.237,
+      "latency_ms": 9.924,
       "note": "aws key under config",
       "pair_id": "pair_03",
       "exact": false
@@ -2973,7 +3045,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 14.174,
+      "latency_ms": 10.61,
       "note": "config path, no secrets",
       "pair_id": "pair_03",
       "exact": true
@@ -2991,7 +3063,7 @@
         "UNMASKABLE_FORMAT"
       ],
       "status": "denied",
-      "latency_ms": 16.878,
+      "latency_ms": 13.133,
       "note": "high entropy salt",
       "pair_id": "pair_04",
       "exact": false
@@ -3008,7 +3080,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 12.968,
+      "latency_ms": 12.167,
       "note": "plain code",
       "pair_id": "pair_04",
       "exact": true
@@ -3025,7 +3097,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 18.995,
+      "latency_ms": 12.054,
       "note": "pii in a doc",
       "pair_id": "pair_05",
       "exact": true
@@ -3041,7 +3113,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 11.529,
+      "latency_ms": 10.919,
       "note": "plain guide",
       "pair_id": "pair_05",
       "exact": true
@@ -3060,7 +3132,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 12.874,
+      "latency_ms": 11.226,
       "note": "password assignment",
       "pair_id": "pair_06",
       "exact": false
@@ -3079,7 +3151,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 9.46,
+      "latency_ms": 10.26,
       "note": "no secrets",
       "pair_id": "pair_06",
       "exact": true
@@ -3098,7 +3170,7 @@
         "UNMASKABLE_FORMAT"
       ],
       "status": "denied",
-      "latency_ms": 11.538,
+      "latency_ms": 10.548,
       "note": "policy rule src/auth/** read mask",
       "pair_id": "pair_07",
       "exact": false
@@ -3115,7 +3187,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 12.053,
+      "latency_ms": 11.389,
       "note": "plain code",
       "pair_id": "pair_07",
       "exact": true
@@ -3132,7 +3204,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 11.609,
+      "latency_ms": 16.406,
       "note": "amex-style card in a doc",
       "pair_id": "pair_08",
       "exact": true
@@ -3148,7 +3220,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 9.66,
+      "latency_ms": 13.319,
       "note": "plain faq",
       "pair_id": "pair_08",
       "exact": true
@@ -3167,7 +3239,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 9.619,
+      "latency_ms": 12.363,
       "note": "jwt secret",
       "pair_id": "pair_09",
       "exact": false
@@ -3186,7 +3258,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 15.572,
+      "latency_ms": 9.648,
       "note": "no secrets",
       "pair_id": "pair_09",
       "exact": true
@@ -3204,7 +3276,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 17.797,
+      "latency_ms": 14.793,
       "note": "policy rule src/auth/** read mask",
       "pair_id": "pair_10",
       "exact": false
@@ -3222,7 +3294,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 13.943,
+      "latency_ms": 12.682,
       "note": "same command, benign path",
       "pair_id": "pair_10",
       "exact": true
@@ -3239,7 +3311,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 9.356,
+      "latency_ms": 6.723,
       "note": "read of a blocked path",
       "pair_id": "pair_11",
       "exact": true
@@ -3256,7 +3328,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 12.644,
+      "latency_ms": 17.09,
       "note": "same command, benign path",
       "pair_id": "pair_11",
       "exact": true
@@ -3274,7 +3346,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 18.281,
+      "latency_ms": 16.526,
       "note": "aws key in the file",
       "pair_id": "pair_12",
       "exact": true
@@ -3291,7 +3363,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 13.193,
+      "latency_ms": 13.577,
       "note": "same command, benign path",
       "pair_id": "pair_12",
       "exact": true
@@ -3309,7 +3381,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 15.221,
+      "latency_ms": 13.189,
       "note": "surfaces the high-entropy salt",
       "pair_id": "pair_13",
       "exact": false
@@ -3327,7 +3399,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 12.493,
+      "latency_ms": 14.266,
       "note": "same command, benign target",
       "pair_id": "pair_13",
       "exact": true
@@ -3348,7 +3420,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 19.135,
+      "latency_ms": 14.789,
       "note": "protected table",
       "pair_id": "pair_14",
       "exact": true
@@ -3366,7 +3438,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 11.676,
+      "latency_ms": 12.653,
       "note": "unprotected table",
       "pair_id": "pair_14",
       "exact": true
@@ -3383,7 +3455,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.34,
+      "latency_ms": 3.164,
       "note": "unknown host, default deny",
       "pair_id": "pair_15",
       "exact": true
@@ -3393,18 +3465,17 @@
       "category": "paired_context",
       "connector": "network",
       "expected": "ALLOW",
-      "decision": "ALLOW",
-      "outcome": "executed",
+      "decision": "BLOCK",
+      "outcome": "blocked",
       "reason_codes": [
-        "ALLOWED",
-        "TASK_MISMATCH",
-        "CONTENT_SENSITIVE"
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
       ],
-      "status": "ok",
-      "latency_ms": 130.848,
+      "status": "blocked",
+      "latency_ms": 57.59,
       "note": "allowlisted host, safe method",
       "pair_id": "pair_15",
-      "exact": true
+      "exact": false
     },
     {
       "id": "pair_16a",
@@ -3418,7 +3489,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 13.025,
+      "latency_ms": 14.769,
       "note": "pii in a doc",
       "pair_id": "pair_16",
       "exact": true
@@ -3434,7 +3505,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 11.523,
+      "latency_ms": 10.758,
       "note": "plain guide",
       "pair_id": "pair_16",
       "exact": true
@@ -3451,7 +3522,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 14.721,
+      "latency_ms": 11.723,
       "note": "mastercard-style card in a doc",
       "pair_id": "pair_17",
       "exact": true
@@ -3467,7 +3538,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 13.285,
+      "latency_ms": 10.501,
       "note": "plain summary",
       "pair_id": "pair_17",
       "exact": true
@@ -3485,7 +3556,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 13.112,
+      "latency_ms": 11.938,
       "note": "policy hint src/pricing weight 0.6",
       "pair_id": "pair_18",
       "exact": false
@@ -3502,7 +3573,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 11.634,
+      "latency_ms": 11.728,
       "note": "same command, benign path",
       "pair_id": "pair_18",
       "exact": true
@@ -3519,7 +3590,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 16.05,
+      "latency_ms": 13.024,
       "note": "high entropy salt",
       "pair_id": "pair_19",
       "exact": true
@@ -3536,7 +3607,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 12.874,
+      "latency_ms": 12.92,
       "note": "plain code",
       "pair_id": "pair_19",
       "exact": true
@@ -3553,7 +3624,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 8.366,
+      "latency_ms": 7.053,
       "note": "read of a blocked path",
       "pair_id": "pair_20",
       "exact": true
@@ -3570,7 +3641,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 15.435,
+      "latency_ms": 12.381,
       "note": "same command, benign path",
       "pair_id": "pair_20",
       "exact": true
@@ -3587,7 +3658,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 7.243,
+      "latency_ms": 6.904,
       "note": "blocked path argument",
       "pair_id": null,
       "exact": true
@@ -3604,7 +3675,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 6.63,
+      "latency_ms": 6.549,
       "note": "deny list curl",
       "pair_id": null,
       "exact": true
@@ -3621,7 +3692,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 7.525,
+      "latency_ms": 7.162,
       "note": "deny list curl plus blocked path",
       "pair_id": null,
       "exact": true
@@ -3638,7 +3709,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 10.464,
+      "latency_ms": 7.907,
       "note": "deny list wget",
       "pair_id": null,
       "exact": true
@@ -3655,7 +3726,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 6.927,
+      "latency_ms": 5.998,
       "note": "deny list nc",
       "pair_id": null,
       "exact": true
@@ -3672,7 +3743,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 6.399,
+      "latency_ms": 5.565,
       "note": "deny list ssh",
       "pair_id": null,
       "exact": true
@@ -3690,7 +3761,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 7.969,
+      "latency_ms": 6.741,
       "note": "deny list sudo",
       "pair_id": null,
       "exact": true
@@ -3709,7 +3780,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 16.752,
+      "latency_ms": 9.567,
       "note": "destructive command",
       "pair_id": null,
       "exact": true
@@ -3727,7 +3798,7 @@
         "TASK_MISMATCH"
       ],
       "status": "denied",
-      "latency_ms": 19.839,
+      "latency_ms": 14.095,
       "note": "destructive command",
       "pair_id": null,
       "exact": true
@@ -3745,7 +3816,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 13.282,
+      "latency_ms": 8.481,
       "note": "path outside the workspace; strictest of destructive-hold and jail-block",
       "pair_id": null,
       "exact": true
@@ -3762,7 +3833,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 6.172,
+      "latency_ms": 2.654,
       "note": "blocked path argument plus shell",
       "pair_id": null,
       "exact": true
@@ -3779,7 +3850,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 4.178,
+      "latency_ms": 2.916,
       "note": "shell metacharacters are blocked by the command gateway",
       "pair_id": null,
       "exact": true
@@ -3796,7 +3867,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 15.363,
+      "latency_ms": 7.457,
       "note": "deny list scp",
       "pair_id": null,
       "exact": true
@@ -3815,7 +3886,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 24.739,
+      "latency_ms": 12.188,
       "note": "unmatched command defaults to hold",
       "pair_id": null,
       "exact": true
@@ -3832,7 +3903,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.814,
+      "latency_ms": 2.493,
       "note": "pipes are blocked by the command gateway",
       "pair_id": null,
       "exact": true
@@ -3849,7 +3920,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 3.938,
+      "latency_ms": 2.999,
       "note": "path outside the workspace and protected pattern",
       "pair_id": null,
       "exact": true
@@ -3866,7 +3937,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 11.03,
+      "latency_ms": 7.307,
       "note": "deny list dd",
       "pair_id": null,
       "exact": true
@@ -3885,7 +3956,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 11.725,
+      "latency_ms": 8.656,
       "note": "unmatched command defaults to hold",
       "pair_id": null,
       "exact": true
@@ -3904,7 +3975,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 11.578,
+      "latency_ms": 8.581,
       "note": "unmatched command defaults to hold",
       "pair_id": null,
       "exact": true
@@ -3923,7 +3994,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 13.129,
+      "latency_ms": 12.264,
       "note": "unmatched command defaults to hold",
       "pair_id": null,
       "exact": true
@@ -3941,7 +4012,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 7.985,
+      "latency_ms": 9.14,
       "note": "path outside the workspace; strictest decision wins",
       "pair_id": null,
       "exact": true
@@ -3960,7 +4031,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 8.92,
+      "latency_ms": 9.186,
       "note": "unmatched command defaults to hold",
       "pair_id": null,
       "exact": true
@@ -3977,7 +4048,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 9.311,
+      "latency_ms": 5.853,
       "note": "protected path argument",
       "pair_id": null,
       "exact": true
@@ -3995,7 +4066,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 15.048,
+      "latency_ms": 7.46,
       "note": "deny list scp",
       "pair_id": null,
       "exact": true
@@ -4014,7 +4085,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 14.65,
+      "latency_ms": 10.069,
       "note": "unmatched command defaults to hold",
       "pair_id": null,
       "exact": true
@@ -4033,7 +4104,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 15.26,
+      "latency_ms": 11.769,
       "note": "unmatched command defaults to hold",
       "pair_id": null,
       "exact": true
@@ -4050,7 +4121,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 5.707,
+      "latency_ms": 3.066,
       "note": "path outside the workspace",
       "pair_id": null,
       "exact": true
@@ -4068,7 +4139,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 8.673,
+      "latency_ms": 6.319,
       "note": "deny list mkfs",
       "pair_id": null,
       "exact": true
@@ -4087,7 +4158,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 15.235,
+      "latency_ms": 10.096,
       "note": "unmatched command defaults to hold",
       "pair_id": null,
       "exact": true
@@ -4104,7 +4175,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 17.392,
+      "latency_ms": 12.268,
       "note": "allowlist cat with a benign path",
       "pair_id": null,
       "exact": true
@@ -4125,7 +4196,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 12.295,
+      "latency_ms": 13.311,
       "note": "protected table",
       "pair_id": null,
       "exact": true
@@ -4145,7 +4216,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 13.293,
+      "latency_ms": 13.57,
       "note": "protected table",
       "pair_id": null,
       "exact": true
@@ -4163,7 +4234,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 15.026,
+      "latency_ms": 13.833,
       "note": "unprotected table",
       "pair_id": null,
       "exact": true
@@ -4181,7 +4252,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 4.51,
+      "latency_ms": 4.554,
       "note": "destructive plus protected table delete",
       "pair_id": null,
       "exact": true
@@ -4199,7 +4270,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 11.5,
+      "latency_ms": 10.375,
       "note": "unprotected table",
       "pair_id": null,
       "exact": true
@@ -4218,7 +4289,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 11.114,
+      "latency_ms": 9.781,
       "note": "protected table write",
       "pair_id": null,
       "exact": true
@@ -4236,7 +4307,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 13.616,
+      "latency_ms": 11.489,
       "note": "unprotected table",
       "pair_id": null,
       "exact": true
@@ -4253,7 +4324,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.723,
+      "latency_ms": 2.652,
       "note": "unsafe sql",
       "pair_id": null,
       "exact": true
@@ -4270,7 +4341,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.675,
+      "latency_ms": 2.896,
       "note": "stacked statements",
       "pair_id": null,
       "exact": true
@@ -4287,7 +4358,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.669,
+      "latency_ms": 3.117,
       "note": "pragma blocked",
       "pair_id": null,
       "exact": true
@@ -4297,18 +4368,17 @@
       "category": "egress",
       "connector": "network",
       "expected": "ALLOW",
-      "decision": "ALLOW",
-      "outcome": "executed",
+      "decision": "BLOCK",
+      "outcome": "blocked",
       "reason_codes": [
-        "ALLOWED",
-        "TASK_MISMATCH",
-        "CONTENT_SENSITIVE"
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
       ],
-      "status": "ok",
-      "latency_ms": 34.213,
+      "status": "blocked",
+      "latency_ms": 54.62,
       "note": "allowlisted host",
       "pair_id": null,
-      "exact": true
+      "exact": false
     },
     {
       "id": "egress_02",
@@ -4323,7 +4393,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 178.734,
+      "latency_ms": 183.623,
       "note": "allowlisted host",
       "pair_id": null,
       "exact": false
@@ -4341,7 +4411,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 13735.023,
+      "latency_ms": 12651.781,
       "note": "allowlisted host",
       "pair_id": null,
       "exact": false
@@ -4358,7 +4428,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 3.815,
+      "latency_ms": 4.064,
       "note": "unknown host, default deny",
       "pair_id": null,
       "exact": true
@@ -4375,7 +4445,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.836,
+      "latency_ms": 2.961,
       "note": "unknown host, default deny",
       "pair_id": null,
       "exact": true
@@ -4392,7 +4462,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.953,
+      "latency_ms": 2.514,
       "note": "private ranges not allowed",
       "pair_id": null,
       "exact": true
@@ -4409,7 +4479,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.561,
+      "latency_ms": 2.74,
       "note": "unknown host, default deny",
       "pair_id": null,
       "exact": true
@@ -4426,7 +4496,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.267,
+      "latency_ms": 2.861,
       "note": "unknown host, default deny",
       "pair_id": null,
       "exact": true
@@ -4436,18 +4506,17 @@
       "category": "egress",
       "connector": "network",
       "expected": "ALLOW",
-      "decision": "ALLOW",
-      "outcome": "executed",
+      "decision": "BLOCK",
+      "outcome": "blocked",
       "reason_codes": [
-        "ALLOWED",
-        "TASK_MISMATCH",
-        "CONTENT_SENSITIVE"
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
       ],
-      "status": "ok",
-      "latency_ms": 16.686,
+      "status": "blocked",
+      "latency_ms": 20.259,
       "note": "allowlisted host",
       "pair_id": null,
-      "exact": true
+      "exact": false
     },
     {
       "id": "egress_10",
@@ -4462,7 +4531,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 23383.847,
+      "latency_ms": 21460.582,
       "note": "allowlisted host",
       "pair_id": null,
       "exact": false
@@ -4480,7 +4549,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 17.448,
+      "latency_ms": 17.874,
       "note": "unprotected table",
       "pair_id": null,
       "exact": true
@@ -4498,7 +4567,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 13.565,
+      "latency_ms": 16.447,
       "note": "unprotected table",
       "pair_id": null,
       "exact": true
@@ -4508,18 +4577,17 @@
       "category": "egress",
       "connector": "network",
       "expected": "ALLOW",
-      "decision": "ALLOW",
-      "outcome": "executed",
+      "decision": "BLOCK",
+      "outcome": "blocked",
       "reason_codes": [
-        "ALLOWED",
-        "TASK_MISMATCH",
-        "CONTENT_SENSITIVE"
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
       ],
-      "status": "ok",
-      "latency_ms": 47.928,
+      "status": "blocked",
+      "latency_ms": 21.999,
       "note": "allowlisted host",
       "pair_id": null,
-      "exact": true
+      "exact": false
     },
     {
       "id": "egress_db_04",
@@ -4534,7 +4602,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 84.918,
+      "latency_ms": 82.255,
       "note": "allowlisted host",
       "pair_id": null,
       "exact": false
@@ -4552,7 +4620,7 @@
         "MASKED_FOR_PRIVACY"
       ],
       "status": "masked",
-      "latency_ms": 12201.136,
+      "latency_ms": 11752.095,
       "note": "allowlisted host",
       "pair_id": null,
       "exact": false
@@ -4568,7 +4636,7 @@
         "ALLOWED"
       ],
       "status": "ok",
-      "latency_ms": 11.076,
+      "latency_ms": 10.792,
       "note": "benign read standing in for an egress fetch",
       "pair_id": null,
       "exact": true
@@ -4585,7 +4653,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 11.092,
+      "latency_ms": 11.867,
       "note": "allowlisted command",
       "pair_id": null,
       "exact": true
@@ -4595,37 +4663,34 @@
       "category": "egress",
       "connector": "network",
       "expected": "HOLD",
-      "decision": "HOLD",
-      "outcome": "timeout",
+      "decision": "BLOCK",
+      "outcome": "blocked",
       "reason_codes": [
-        "APPROVAL_TIMEOUT",
-        "OUTBOUND_WRITE",
-        "TASK_MISMATCH",
-        "CONTENT_SENSITIVE"
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
       ],
-      "status": "denied",
-      "latency_ms": 34.066,
+      "status": "blocked",
+      "latency_ms": 32.048,
       "note": "write method to an allowed host",
       "pair_id": "egress_dos_03",
-      "exact": true
+      "exact": false
     },
     {
       "id": "egress_dos_03b",
       "category": "egress",
       "connector": "network",
       "expected": "ALLOW",
-      "decision": "ALLOW",
-      "outcome": "executed",
+      "decision": "BLOCK",
+      "outcome": "blocked",
       "reason_codes": [
-        "ALLOWED",
-        "TASK_MISMATCH",
-        "CONTENT_SENSITIVE"
+        "EGRESS_DENIED",
+        "TASK_MISMATCH"
       ],
-      "status": "ok",
-      "latency_ms": 13.816,
+      "status": "blocked",
+      "latency_ms": 4.591,
       "note": "same host, safe method",
       "pair_id": "egress_dos_03",
-      "exact": true
+      "exact": false
     },
     {
       "id": "cmd_benign_01",
@@ -4639,7 +4704,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 12.119,
+      "latency_ms": 11.951,
       "note": "allowlist cat with a benign path",
       "pair_id": null,
       "exact": true
@@ -4657,7 +4722,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 9.895,
+      "latency_ms": 10.98,
       "note": "allowlist ls",
       "pair_id": null,
       "exact": true
@@ -4674,7 +4739,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 13.032,
+      "latency_ms": 11.913,
       "note": "allowlist head",
       "pair_id": null,
       "exact": true
@@ -4692,7 +4757,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "ok",
-      "latency_ms": 13.245,
+      "latency_ms": 13.377,
       "note": "allowlist grep inside the workspace",
       "pair_id": null,
       "exact": true
@@ -4709,7 +4774,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 12.801,
+      "latency_ms": 11.434,
       "note": "allowlist wc",
       "pair_id": null,
       "exact": true
@@ -4726,7 +4791,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 19.369,
+      "latency_ms": 22.514,
       "note": "allowlist git diff",
       "pair_id": null,
       "exact": true
@@ -4743,7 +4808,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 14.454,
+      "latency_ms": 12.612,
       "note": "allowlist tail",
       "pair_id": null,
       "exact": true
@@ -4760,7 +4825,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 11.647,
+      "latency_ms": 12.552,
       "note": "allowlist cat with a benign path",
       "pair_id": null,
       "exact": true
@@ -4777,7 +4842,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 12.281,
+      "latency_ms": 11.531,
       "note": "allowlist git log",
       "pair_id": null,
       "exact": true
@@ -4794,7 +4859,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 11.626,
+      "latency_ms": 11.467,
       "note": "allowlist git status",
       "pair_id": null,
       "exact": true
@@ -4811,7 +4876,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 5.464,
+      "latency_ms": 5.815,
       "note": "protected path argument",
       "pair_id": null,
       "exact": true
@@ -4828,7 +4893,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.552,
+      "latency_ms": 2.691,
       "note": "deny list curl",
       "pair_id": null,
       "exact": true
@@ -4845,7 +4910,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 6.323,
+      "latency_ms": 6.484,
       "note": "protected path argument",
       "pair_id": null,
       "exact": true
@@ -4863,7 +4928,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 9.151,
+      "latency_ms": 6.482,
       "note": "blocked path argument",
       "pair_id": null,
       "exact": true
@@ -4882,7 +4947,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 9.576,
+      "latency_ms": 8.588,
       "note": "blocked path argument",
       "pair_id": null,
       "exact": true
@@ -4900,7 +4965,7 @@
         "TASK_MISMATCH"
       ],
       "status": "denied",
-      "latency_ms": 11.226,
+      "latency_ms": 10.138,
       "note": "destructive command",
       "pair_id": null,
       "exact": true
@@ -4918,7 +4983,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 13.684,
+      "latency_ms": 8.149,
       "note": "deny list sudo",
       "pair_id": null,
       "exact": true
@@ -4937,7 +5002,7 @@
         "CONTENT_SENSITIVE"
       ],
       "status": "denied",
-      "latency_ms": 12.378,
+      "latency_ms": 10.489,
       "note": "destructive command",
       "pair_id": null,
       "exact": true
@@ -4954,7 +5019,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 9.141,
+      "latency_ms": 6.784,
       "note": "deny list ssh",
       "pair_id": null,
       "exact": true
@@ -4972,7 +5037,7 @@
         "TASK_MISMATCH"
       ],
       "status": "denied",
-      "latency_ms": 26.531,
+      "latency_ms": 12.521,
       "note": "destructive command",
       "pair_id": null,
       "exact": true
@@ -4989,7 +5054,7 @@
         "TASK_MISMATCH"
       ],
       "status": "ok",
-      "latency_ms": 13.676,
+      "latency_ms": 14.715,
       "note": "allowlist grep inside the workspace",
       "pair_id": null,
       "exact": true
@@ -5006,7 +5071,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.661,
+      "latency_ms": 2.819,
       "note": "shell metacharacters are blocked by the command gateway",
       "pair_id": null,
       "exact": true
@@ -5025,7 +5090,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 6.966,
+      "latency_ms": 6.391,
       "note": "path outside the workspace",
       "pair_id": null,
       "exact": true
@@ -5042,7 +5107,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 8.734,
+      "latency_ms": 7.447,
       "note": "deny list dd",
       "pair_id": null,
       "exact": true
@@ -5059,7 +5124,7 @@
         "TASK_MISMATCH"
       ],
       "status": "blocked",
-      "latency_ms": 2.902,
+      "latency_ms": 2.56,
       "note": "pipes are blocked by the command gateway",
       "pair_id": null,
       "exact": true

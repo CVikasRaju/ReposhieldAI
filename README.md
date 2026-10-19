@@ -40,36 +40,59 @@ The product is for anyone running AI agents: developers, business teams, student
 
 ---
 
-## Quickstart (local mode, once built)
+## Quickstart (local mode)
 
 ```bash
-make setup          # create venv, install backend deps
-make seed           # generate workspace/ and workspace/business.db (synthetic data only)
-make train-model    # train the offline content model
-make run            # gateway: MCP on :8001 (agent side), dashboard API on :8000 (human side)
-
-cd frontend && npm install && npm run dev    # dashboard on http://localhost:5173
-
-make demo           # scripted prompt-injection attack against the gateway
-make eval           # metrics against the labelled dataset and keyword baseline
+make setup          # create .venv and install backend dependencies
+make seed           # write workspace/ and workspace/business.db (synthetic data only)
+make train-model    # train the offline content model (deterministic)
 make test           # unit and integration tests
+make lint           # ruff
+
+make run            # gateway: MCP on :8001 (agent side), dashboard API on :8000
 ```
 
-On startup the gateway prints an **approver token** and a dashboard URL containing it. Open that URL. Every API call and WebSocket connection requires the token.
+`make setup` uses `python3` on Linux and macOS and `python` on Windows. Pass
+`PYTHON=/path/to/python3` if neither is on PATH.
+
+In a second terminal:
+
+```bash
+make dashboard      # Vite dev server on http://localhost:5173
+make demo           # eight-step scripted attack, with assertions
+make eval           # metrics vs the keyword baseline, writes eval/results/
+make tamper-demo    # proves the hash chain detects edits on a copy
+```
+
+On startup the gateway prints an **approver token** and a dashboard URL such as
+`http://localhost:5173/#token=<token>`. Open that URL. Every API call and
+WebSocket connection requires the token; it stays in the page's memory only.
+
+`make demo` starts its own gateway when none is running. When one is already
+running, export the same token first (`RS_APPROVER_TOKEN=... make demo`) and the
+demo reuses it so the dashboard shows the steps live.
 
 ### Hardened mode (Docker sandbox)
 
 ```bash
-docker compose up --build
-python scripts/verify_isolation.py     # proves the agent container cannot bypass the gateway
+make seed                                  # the gateway mounts workspace/ read-write
+export RS_APPROVER_TOKEN=$(python -c "import secrets; print(secrets.token_urlsafe(24))")
+docker compose up --build -d               # gateway (healthy), agent, collector
+make verify-isolation                      # five checks inside the agent container
+docker compose exec -T agent python simulated_agent.py   # the demo, from the sandbox
+export RS_APPROVER_TOKEN=... ; open http://localhost:5173/#token=$RS_APPROVER_TOKEN
 ```
+
+The dashboard is published on `127.0.0.1:8000` only. The agent container has no
+workspace, no policy, no data and no approver token, and its only network is the
+internal one that reaches the gateway.
 
 ### Ports
 
 | Port | Serves | Reachable by |
 |---|---|---|
-| 8001 | MCP endpoint `/mcp` only | The agent |
-| 8000 | Dashboard API `/api/*` and `/ws` only | Humans (localhost). Token required. |
+| 8001 | MCP endpoint `/mcp` only | The agent (and, in Docker, only `agent_net`) |
+| 8000 | Dashboard API `/api/*` and `/ws` only | Humans (loopback). Token required. |
 
 The two ports are separate listeners. The MCP port never serves an approval route.
 
@@ -88,5 +111,13 @@ The two ports are separate listeners. The MCP port never serves an approval rout
 
 - Protection holds while the agent runs inside the RepoShield sandbox and reaches data only through the gateway. An agent with its own unrestricted shell can bypass any proxy, which is why the sandbox is part of the design.
 - Masked code is for comprehension, not execution.
-- The offline content model is small and trained on synthetic data. Its numbers are reported as measured, with a keyword-only baseline for comparison.
+- The offline content model is small and trained on synthetic data. Its numbers are reported as measured, with a keyword-only baseline for comparison; the misses are listed in `eval/results/results.md`.
+- The optional process watchdog is a local-mode detection layer only; container isolation comes from the Docker topology.
 - Anti-training canary traps and watermarking are out of scope. See `docs/01-PRODUCT.md`.
+
+## Where to look
+
+- `docs/PROGRESS.md` — per-phase status with the command and result behind it.
+- `eval/results/results.md` — measured metrics, per-category breakdown and every failure.
+- `docs/screenshots/` — the dashboard captured from a live gateway.
+- `docs/DECISIONS.md` — every deviation from the specification and why.
