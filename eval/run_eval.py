@@ -66,7 +66,7 @@ SYNTHETIC_DOCS: tuple[tuple[str, str], ...] = (
         "config/trial_secrets.ini",
         "[service]\n"
         "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE\"\n"
-        "API_KEY = \"gh_example_token_not_real_123456789\"\n"
+        "API_KEY = \"api_key_mock_token_for_tests_123\"\n"
         "endpoint = https://internal.example.net:8443\n",
     ),
     (
