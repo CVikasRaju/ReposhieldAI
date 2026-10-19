@@ -1,24 +1,27 @@
+# RepoShield agent sandbox: an MCP client and nothing else.
+#
+# It contains no gateway code, no policy and no workspace. The only network it
+# can reach is the internal agent_net (the gateway), and its root filesystem is
+# read-only with every capability dropped by docker-compose.
 FROM python:3.11-slim
 
-# Create app user (non-root)
-RUN useradd -m appuser
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Set working directory
+RUN useradd --create-home --uid 10001 --shell /usr/sbin/nologin agent
+
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Only the MCP client dependency tree: no FastAPI, no database drivers, no
+# gateway package.
+RUN pip install --no-cache-dir "mcp>=1.2,<2.0"
 
-# Copy only the essentials (no workspace mount)
-COPY --chown=appuser:appuser backend/ /app/backend/
-COPY --chown=appuser:appwarehouse scripts/ /app/scripts/
+COPY --chown=agent:agent demo/simulated_agent.py ./simulated_agent.py
+COPY --chown=agent:agent scripts/verify_isolation.py ./scripts/verify_isolation.py
 
-# Drop capabilities, read-only root
-USER appuser
+USER agent
 
-# Expose gateway ports
-EXPOSE 8000 8001
-
-# Default command
-CMD ["python", "-m", "backend.main"]
+# The sandbox idles; run the demo on demand:
+#   docker compose exec -T agent python simulated_agent.py --mcp http://gateway:8001/mcp
+CMD ["sleep", "infinity"]

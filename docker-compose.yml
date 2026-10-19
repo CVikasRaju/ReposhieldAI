@@ -1,22 +1,51 @@
-version: "3.8"
-
+# RepoShield sandbox topology (docs/02 section 6).
+#
+# agent_net is internal: the agent can reach the gateway's MCP port and nothing
+# else, including the internet and the collector. host_net carries the gateway,
+# the dashboard loopback port and the demo collector.
 services:
   gateway:
-    build: .
+    build:
+      context: .
+      dockerfile: sandbox/Dockerfile.gateway
     container_name: reposhield-gateway
-    ports:
-      - "8000:8000"  # API dashboard
-      - "8001:8001"  # MCP agent
     environment:
-      - RS_PROFILE=developer
-      - RS_APPROVER_TOKEN=integration-token
-      - RS_WORKSPACE=/app/workspace
-      - RS_DATA_DIR=/app/data
+      RS_WORKSPACE: /app/workspace
+      RS_POLICY_PATH: /app/.aishield
+      RS_DATA_DIR: /app/data
+      RS_APPROVER_TOKEN: ${RS_APPROVER_TOKEN:-}
+      # Containers must listen on all interfaces for the other services to
+      # reach them; the host only publishes the dashboard on loopback.
+      RS_MCP_HOST: 0.0.0.0
+      RS_API_HOST: 0.0.0.0
+      # The MCP SDK rejects unknown Host headers; the agent connects as
+      # gateway:8001 on agent_net.
+      RS_MCP_ALLOWED_HOSTS: gateway:8001,gateway,127.0.0.1:8001,localhost:8001
     volumes:
-      - ./workspace:/app/workspace:ro
-      - ./business.db:/app/business.db:ro
+      # Read-write: write_file, delete_file and snapshot rollback need it.
+      - ./workspace:/app/workspace
+      - ./.aishield:/app/.aishield:ro
+      - ./data:/app/data
+    ports:
+      - "127.0.0.1:8000:8000"
+    expose:
+      - "8001"
+    networks:
+      - agent_net
+      - host_net
     cap_drop:
       - ALL
+    security_opt:
+      - "no-new-privileges:true"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import socket; socket.create_connection(('127.0.0.1', 8000), 2).close()"
+      interval: 3s
+      timeout: 3s
+      retries: 20
     restart: unless-stopped
 
   agent:
@@ -24,26 +53,43 @@ services:
       context: .
       dockerfile: sandbox/Dockerfile.agent
     container_name: reposhield-agent
-    depends_on:
-      - gateway
-    environment:
-      - RS_MCP_PORT=8001
-      - RS_API_PORT=8000
-      - RS_APPROVER_TOKEN=integration-token
-    # No workspace mount - agent has read-only root filesystem
+    networks:
+      - agent_net
+    read_only: true
     cap_drop:
       - ALL
-    read_only: true
+    security_opt:
+      - "no-new-privileges:true"
     tmpfs:
       - /tmp
+    environment:
+      # The agent never receives RS_APPROVER_TOKEN.
+      RS_MCP_HOST: gateway
+      RS_MCP_PORT: "8001"
+    depends_on:
+      gateway:
+        condition: service_healthy
     restart: unless-stopped
 
   collector:
-    image: appropriate/curl:latest
+    build:
+      context: .
+      dockerfile: sandbox/Dockerfile.gateway
+    command: ["python", "demo/evil_collector.py"]
     container_name: reposhield-collector
-    ports:
-      - "9999:9999"
-    environment:
-      - LISTEN_PORT=9999
-    command: ["sh", "-c", "while true; do nc -l -p 9999 > /dev/null; done"]
+    networks:
+      host_net:
+        aliases:
+          - collector.local
+    volumes:
+      - ./data:/app/data
+    cap_drop:
+      - ALL
+    security_opt:
+      - "no-new-privileges:true"
     restart: unless-stopped
+
+networks:
+  agent_net:
+    internal: true
+  host_net: {}

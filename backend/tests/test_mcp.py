@@ -16,7 +16,7 @@ import httpx
 import pytest
 
 from backend.core.models import ActionRequest, Decision, ExecutionPlan, Resolution
-from backend.mcp_app import get_session_id, session_context
+from backend.mcp_app import get_session_id, session_context, transport_security
 from backend.tests.mcp_helpers import (
     call_tool,
     make_gateway,
@@ -25,6 +25,22 @@ from backend.tests.mcp_helpers import (
     running_server,
     wait_for_pending,
 )
+
+
+def test_transport_security_keeps_sdk_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Unset allowlists leave the SDK's localhost-only protection in place."""
+    monkeypatch.delenv("RS_MCP_ALLOWED_HOSTS", raising=False)
+    monkeypatch.delenv("RS_MCP_ALLOWED_ORIGINS", raising=False)
+    assert transport_security() is None
+
+
+def test_transport_security_accepts_container_hosts(monkeypatch: pytest.MonkeyPatch) -> None:
+    """RS_MCP_ALLOWED_HOSTS lets a container reach the MCP port by service name."""
+    monkeypatch.setenv("RS_MCP_ALLOWED_HOSTS", "gateway:8001, gateway")
+    settings = transport_security()
+    assert settings is not None
+    assert settings.allowed_hosts == ["gateway:8001", "gateway"]
+    assert settings.enable_dns_rebinding_protection is True
 
 
 def _sha(path: Path) -> str:

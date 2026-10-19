@@ -6,6 +6,7 @@ Only the MCP endpoint is mounted. Every tool call goes through the pipeline.
 from __future__ import annotations
 
 import json
+import os
 from collections.abc import Iterator
 from contextlib import asynccontextmanager, contextmanager
 from contextvars import ContextVar, Token
@@ -13,6 +14,7 @@ from typing import Any
 
 from fastapi import FastAPI
 from mcp.server.fastmcp import Context, FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
 from backend.core.models import ActionRequest, ConnectorName, ToolResult
 from backend.core.pipeline import Pipeline
@@ -61,6 +63,33 @@ def get_session_id(ctx: Context | None = None) -> str:
     return header or transport or "default"
 
 
+def transport_security() -> TransportSecuritySettings | None:
+    """Allow extra MCP Host headers for container hostnames.
+
+    The SDK rejects unknown Host headers to stop DNS-rebinding attacks. A
+    container reaches the gateway as ``gateway:8001``, so an operator lists the
+    accepted hosts in ``RS_MCP_ALLOWED_HOSTS``. Unset keeps the SDK default
+    (localhost only).
+    """
+    hosts = [
+        item.strip()
+        for item in os.environ.get("RS_MCP_ALLOWED_HOSTS", "").split(",")
+        if item.strip()
+    ]
+    origins = [
+        item.strip()
+        for item in os.environ.get("RS_MCP_ALLOWED_ORIGINS", "").split(",")
+        if item.strip()
+    ]
+    if not hosts and not origins:
+        return None
+    return TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=hosts,
+        allowed_origins=origins,
+    )
+
+
 def create_mcp_app(pipeline: Pipeline) -> FastAPI:
     """Build the MCP-only FastAPI application."""
     mcp = FastMCP(
@@ -72,6 +101,7 @@ def create_mcp_app(pipeline: Pipeline) -> FastAPI:
         streamable_http_path="/mcp",
         stateless_http=False,
         log_level="WARNING",
+        transport_security=transport_security(),
     )
 
     async def run(request: ActionRequest) -> dict[str, Any]:
