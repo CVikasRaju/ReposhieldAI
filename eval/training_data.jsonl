@@ -1,0 +1,456 @@
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE00\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0001", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0002", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0003", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword4!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword5@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_6.EXAMPLE_SIG_6", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_7\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0008\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0009", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE10\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0011", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0012", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0013", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword14!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword15@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_16.EXAMPLE_SIG_16", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_17\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0018\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0019", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE20\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0021", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0022", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0023", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword24!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword25@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_26.EXAMPLE_SIG_26", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_27\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0028\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0029", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE30\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0031", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0032", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0033", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword34!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword35@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_36.EXAMPLE_SIG_36", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_37\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0038\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0039", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE40\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0041", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0042", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0043", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword44!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword45@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_46.EXAMPLE_SIG_46", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_47\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0048\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0049", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE50\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0051", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0052", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0053", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword54!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword55@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_56.EXAMPLE_SIG_56", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_57\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0058\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0059", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE60\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0061", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0062", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0063", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword64!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword65@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_66.EXAMPLE_SIG_66", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_67\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0068\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0069", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE70\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0071", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0072", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0073", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword74!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword75@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_76.EXAMPLE_SIG_76", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_77\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0078\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0079", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE80\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0081", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0082", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0083", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword84!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword85@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_86.EXAMPLE_SIG_86", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_87\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0088\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0089", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE90\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0091", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0092", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0093", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword94!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword95@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_96.EXAMPLE_SIG_96", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_97\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0098\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0099", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE100\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0101", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0102", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0103", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword104!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword105@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_106.EXAMPLE_SIG_106", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_107\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0108\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0109", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE110\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0111", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0112", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0113", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword114!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword115@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_116.EXAMPLE_SIG_116", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_117\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0118\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0119", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE120\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0121", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0122", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0123", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword124!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword125@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_126.EXAMPLE_SIG_126", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_127\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0128\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0129", "context": "logs/request.txt", "label": 1}
+{"text": "AWS_ACCESS_KEY_ID = \"AKIAIOSFODNN7EXAMPLE130\"", "context": "config/settings.py", "label": 1}
+{"text": "GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_0131", "context": ".env", "label": 1}
+{"text": "STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_0132", "context": ".env", "label": 1}
+{"text": "SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-0133", "context": "config/secrets.yaml", "label": 1}
+{"text": "password = \"ExampleSecretPassword134!\"", "context": "src/db/connect.py", "label": 1}
+{"text": "DATABASE_URL=postgres://admin:ExamplePassword135@db.internal:5432/prod", "context": ".env", "label": 1}
+{"text": "JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_136.EXAMPLE_SIG_136", "context": "deploy/config.yml", "label": 1}
+{"text": "-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_137\n-----END RSA PRIVATE KEY-----", "context": "keys/server.pem", "label": 1}
+{"text": "api_key = \"example_api_key_value_0138\"", "context": "scripts/sync.py", "label": 1}
+{"text": "Authorization: Bearer example_bearer_token_0139", "context": "logs/request.txt", "label": 1}
+{"text": "Arjun Iyer,arjun.iyer405@corp.test,+1-555-174-9779,359083016616,Pune", "context": "exports/customers.csv", "label": 1}
+{"text": "Customer Isha Bose can be reached at isha.bose61@corp.test or +1-555-328-2013. ID 803082462817.", "context": "notes/accounts.txt", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'isha.iyer106@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'arjun.patel255@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Meera Nair\", \"email\": \"meera.nair156@mail.test\", \"phone\": \"+1-555-531-1642\", \"national_id\": \"389555979717\"}", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Priya Kapoor\", \"email\": \"priya.kapoor714@corp.test\", \"phone\": \"+1-555-162-6072\", \"national_id\": \"946507529172\"}", "context": "db:customers", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'kabir.patel133@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "Arjun Bose,arjun.bose981@corp.test,+1-555-254-2359,423307924404,Chennai", "context": "exports/customers.csv", "label": 1}
+{"text": "Isha Nair,isha.nair625@mail.test,+1-555-228-9445,278666617608,Pune", "context": "exports/customers.csv", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'kabir.kapoor167@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "Customer Meera Patel can be reached at meera.patel979@mail.test or +1-555-716-6966. ID 911777741217.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Customer Priya Kapoor can be reached at priya.kapoor849@corp.test or +1-555-628-1378. ID 585280841485.", "context": "notes/accounts.txt", "label": 1}
+{"text": "{\"full_name\": \"Meera Nair\", \"email\": \"meera.nair791@corp.test\", \"phone\": \"+1-555-645-9873\", \"national_id\": \"739336338756\"}", "context": "db:customers", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'asha.patel484@mail.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'dev.gupta861@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Rohan Iyer\", \"email\": \"rohan.iyer175@corp.test\", \"phone\": \"+1-555-128-3476\", \"national_id\": \"929975288203\"}", "context": "db:customers", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'rohan.menon768@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Meera Rao\", \"email\": \"meera.rao932@mail.test\", \"phone\": \"+1-555-569-9466\", \"national_id\": \"882828807293\"}", "context": "db:customers", "label": 1}
+{"text": "Customer Meera Iyer can be reached at meera.iyer145@mail.test or +1-555-733-2971. ID 258887180338.", "context": "notes/accounts.txt", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'asha.sharma520@mail.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "Isha Khan,isha.khan716@mail.test,+1-555-672-4319,926167513617,Delhi", "context": "exports/customers.csv", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'rohan.iyer963@mail.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "Customer Arjun Bose can be reached at arjun.bose201@mail.test or +1-555-426-2510. ID 705877065898.", "context": "notes/accounts.txt", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'isha.sharma116@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Arjun Sharma\", \"email\": \"arjun.sharma286@corp.test\", \"phone\": \"+1-555-918-4003\", \"national_id\": \"814014193144\"}", "context": "db:customers", "label": 1}
+{"text": "Vikram Rao,vikram.rao348@mail.test,+1-555-374-3117,283124023447,Delhi", "context": "exports/customers.csv", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'vikram.menon689@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Rohan Bose\", \"email\": \"rohan.bose673@mail.test\", \"phone\": \"+1-555-659-7440\", \"national_id\": \"633532650206\"}", "context": "db:customers", "label": 1}
+{"text": "Customer Priya Bose can be reached at priya.bose168@corp.test or +1-555-186-7240. ID 693407224700.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Arjun Nair,arjun.nair996@mail.test,+1-555-350-1564,635205617487,Mumbai", "context": "exports/customers.csv", "label": 1}
+{"text": "Isha Rao,isha.rao94@mail.test,+1-555-936-2470,469060443193,Jaipur", "context": "exports/customers.csv", "label": 1}
+{"text": "Neha Nair,neha.nair738@mail.test,+1-555-253-5655,408682889092,Pune", "context": "exports/customers.csv", "label": 1}
+{"text": "{\"full_name\": \"Asha Rao\", \"email\": \"asha.rao137@mail.test\", \"phone\": \"+1-555-207-7170\", \"national_id\": \"980083740715\"}", "context": "db:customers", "label": 1}
+{"text": "Isha Sharma,isha.sharma764@mail.test,+1-555-358-2219,633377617409,Pune", "context": "exports/customers.csv", "label": 1}
+{"text": "Customer Dev Iyer can be reached at dev.iyer340@mail.test or +1-555-767-5987. ID 407074137486.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Vikram Kapoor,vikram.kapoor478@corp.test,+1-555-662-4264,617047187467,Mumbai", "context": "exports/customers.csv", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'rohan.gupta93@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "Customer Asha Iyer can be reached at asha.iyer4@mail.test or +1-555-797-8385. ID 842656515057.", "context": "notes/accounts.txt", "label": 1}
+{"text": "{\"full_name\": \"Neha Sharma\", \"email\": \"neha.sharma963@corp.test\", \"phone\": \"+1-555-830-1192\", \"national_id\": \"645166915644\"}", "context": "db:customers", "label": 1}
+{"text": "Priya Sharma,priya.sharma53@mail.test,+1-555-750-3439,546853560686,Pune", "context": "exports/customers.csv", "label": 1}
+{"text": "Customer Asha Bose can be reached at asha.bose462@corp.test or +1-555-759-5689. ID 908227654442.", "context": "notes/accounts.txt", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'neha.khan309@mail.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'neha.iyer561@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "Customer Neha Bose can be reached at neha.bose764@corp.test or +1-555-485-5427. ID 707495288313.", "context": "notes/accounts.txt", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'kabir.bose410@mail.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Vikram Khan\", \"email\": \"vikram.khan802@corp.test\", \"phone\": \"+1-555-329-3529\", \"national_id\": \"481718002396\"}", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Priya Iyer\", \"email\": \"priya.iyer642@mail.test\", \"phone\": \"+1-555-640-8166\", \"national_id\": \"311489364399\"}", "context": "db:customers", "label": 1}
+{"text": "Asha Menon,asha.menon309@mail.test,+1-555-385-6183,578383064000,Chennai", "context": "exports/customers.csv", "label": 1}
+{"text": "{\"full_name\": \"Neha Sharma\", \"email\": \"neha.sharma264@corp.test\", \"phone\": \"+1-555-783-7952\", \"national_id\": \"737056563043\"}", "context": "db:customers", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'kabir.kapoor994@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Neha Rao\", \"email\": \"neha.rao972@corp.test\", \"phone\": \"+1-555-502-1890\", \"national_id\": \"509260026755\"}", "context": "db:customers", "label": 1}
+{"text": "Customer Rohan Iyer can be reached at rohan.iyer338@corp.test or +1-555-289-9598. ID 904655721014.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Rohan Nair,rohan.nair431@corp.test,+1-555-674-4398,854610735876,Delhi", "context": "exports/customers.csv", "label": 1}
+{"text": "Customer Arjun Kapoor can be reached at arjun.kapoor32@mail.test or +1-555-353-7631. ID 260710431957.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Customer Priya Nair can be reached at priya.nair981@corp.test or +1-555-368-6185. ID 640910317760.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Neha Kapoor,neha.kapoor136@mail.test,+1-555-287-1142,629355759182,Chennai", "context": "exports/customers.csv", "label": 1}
+{"text": "Meera Khan,meera.khan418@corp.test,+1-555-765-1554,988526114917,Pune", "context": "exports/customers.csv", "label": 1}
+{"text": "Customer Neha Kapoor can be reached at neha.kapoor727@mail.test or +1-555-277-4837. ID 467938144491.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Customer Arjun Patel can be reached at arjun.patel756@mail.test or +1-555-303-8199. ID 523324935169.", "context": "notes/accounts.txt", "label": 1}
+{"text": "{\"full_name\": \"Kabir Menon\", \"email\": \"kabir.menon539@corp.test\", \"phone\": \"+1-555-765-2647\", \"national_id\": \"901073750438\"}", "context": "db:customers", "label": 1}
+{"text": "Customer Asha Khan can be reached at asha.khan615@corp.test or +1-555-176-7098. ID 479401995302.", "context": "notes/accounts.txt", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'arjun.iyer46@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "Customer Isha Kapoor can be reached at isha.kapoor65@mail.test or +1-555-203-7476. ID 481264644606.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Customer Dev Nair can be reached at dev.nair425@mail.test or +1-555-118-6960. ID 566306261167.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Vikram Iyer,vikram.iyer134@corp.test,+1-555-152-3334,819958225423,Pune", "context": "exports/customers.csv", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'rohan.bose503@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Dev Khan\", \"email\": \"dev.khan850@mail.test\", \"phone\": \"+1-555-287-4573\", \"national_id\": \"268265123304\"}", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Arjun Sharma\", \"email\": \"arjun.sharma400@mail.test\", \"phone\": \"+1-555-663-6017\", \"national_id\": \"849366578727\"}", "context": "db:customers", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'asha.gupta502@mail.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Isha Menon\", \"email\": \"isha.menon673@corp.test\", \"phone\": \"+1-555-141-3134\", \"national_id\": \"358108620195\"}", "context": "db:customers", "label": 1}
+{"text": "Customer Kabir Iyer can be reached at kabir.iyer907@mail.test or +1-555-394-3705. ID 515942594729.", "context": "notes/accounts.txt", "label": 1}
+{"text": "Isha Kapoor,isha.kapoor214@mail.test,+1-555-730-9290,555032624564,Delhi", "context": "exports/customers.csv", "label": 1}
+{"text": "Customer Rohan Menon can be reached at rohan.menon50@mail.test or +1-555-993-8422. ID 348654659255.", "context": "notes/accounts.txt", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'rohan.kapoor236@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "Customer Neha Menon can be reached at neha.menon373@corp.test or +1-555-235-9001. ID 590000954186.", "context": "notes/accounts.txt", "label": 1}
+{"text": "{\"full_name\": \"Isha Khan\", \"email\": \"isha.khan424@mail.test\", \"phone\": \"+1-555-703-3190\", \"national_id\": \"559722032711\"}", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Meera Patel\", \"email\": \"meera.patel412@mail.test\", \"phone\": \"+1-555-111-1919\", \"national_id\": \"799798732006\"}", "context": "db:customers", "label": 1}
+{"text": "SELECT * FROM customers WHERE email = 'isha.rao416@corp.test' LIMIT 10", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Dev Iyer\", \"email\": \"dev.iyer521@mail.test\", \"phone\": \"+1-555-165-5919\", \"national_id\": \"278066717238\"}", "context": "db:customers", "label": 1}
+{"text": "{\"full_name\": \"Priya Khan\", \"email\": \"priya.khan660@corp.test\", \"phone\": \"+1-555-226-6497\", \"national_id\": \"604868443181\"}", "context": "db:customers", "label": 1}
+{"text": "{\"customer\": \"acc-9693\", \"card\": \"4433253659368777\", \"amount\": 114}", "context": "db:payments", "label": 1}
+{"text": "Card on file 4639 4369 9192 2003 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=249693 account=GB56WEST38161333100147", "context": "db:payroll", "label": 1}
+{"text": "Invoice 6256 paid with card 4213455640544053 by customer Dev.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB37WEST19426083400571 belongs to Vikram Iyer.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-2713\", \"card\": \"5958492433721172\", \"amount\": 5361}", "context": "db:payments", "label": 1}
+{"text": "Card on file 5166 1605 3446 8823 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=244507 account=GB51WEST27749325738344", "context": "db:payroll", "label": 1}
+{"text": "Invoice 3696 paid with card 6922359852353418 by customer Rohan.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB14WEST06638470249603 belongs to Neha Gupta.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-3563\", \"card\": \"6639321765416363\", \"amount\": 4106}", "context": "db:payments", "label": 1}
+{"text": "Card on file 5770 9682 5067 1042 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=186757 account=GB53WEST67326819504466", "context": "db:payroll", "label": 1}
+{"text": "Invoice 8571 paid with card 4016659413468361 by customer Kabir.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB55WEST34646270453457 belongs to Vikram Bose.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-1188\", \"card\": \"6152460195285902\", \"amount\": 3446}", "context": "db:payments", "label": 1}
+{"text": "Card on file 4449 1923 2752 3680 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=119335 account=GB63WEST32778077273728", "context": "db:payroll", "label": 1}
+{"text": "Invoice 1467 paid with card 6025797475661251 by customer Asha.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB53WEST78834656480445 belongs to Vikram Bose.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-1656\", \"card\": \"5848537153542911\", \"amount\": 6545}", "context": "db:payments", "label": 1}
+{"text": "Card on file 6868 9064 1003 7903 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=160512 account=GB22WEST05248442605069", "context": "db:payroll", "label": 1}
+{"text": "Invoice 3544 paid with card 6907980169671066 by customer Vikram.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB26WEST70493720521487 belongs to Vikram Patel.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-6181\", \"card\": \"4000091644927908\", \"amount\": 6032}", "context": "db:payments", "label": 1}
+{"text": "Card on file 6772 2152 6767 4957 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=151543 account=GB97WEST69374054462904", "context": "db:payroll", "label": 1}
+{"text": "Invoice 6070 paid with card 4924875818876336 by customer Dev.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB60WEST98485789333312 belongs to Priya Nair.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-6173\", \"card\": \"6956823075157129\", \"amount\": 507}", "context": "db:payments", "label": 1}
+{"text": "Card on file 5489 0103 9799 3443 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=59125 account=GB81WEST57719611459318", "context": "db:payroll", "label": 1}
+{"text": "Invoice 5225 paid with card 5272533204508006 by customer Isha.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB57WEST46157627320730 belongs to Meera Khan.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-6997\", \"card\": \"4952716017553711\", \"amount\": 2349}", "context": "db:payments", "label": 1}
+{"text": "Card on file 5302 7827 2466 3205 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=215413 account=GB95WEST38741435643316", "context": "db:payroll", "label": 1}
+{"text": "Invoice 5692 paid with card 5620420785827089 by customer Meera.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB20WEST19742329394301 belongs to Isha Bose.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-7014\", \"card\": \"6085547106724326\", \"amount\": 610}", "context": "db:payments", "label": 1}
+{"text": "Card on file 4599 0587 8115 3561 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=212287 account=GB33WEST21448001340997", "context": "db:payroll", "label": 1}
+{"text": "Invoice 2802 paid with card 6371512041779846 by customer Rohan.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB86WEST98060556356956 belongs to Isha Rao.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-9270\", \"card\": \"5825360518215637\", \"amount\": 351}", "context": "db:payments", "label": 1}
+{"text": "Card on file 4266 7000 9494 8094 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=205789 account=GB75WEST41798271824694", "context": "db:payroll", "label": 1}
+{"text": "Invoice 5975 paid with card 5318479936385782 by customer Dev.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB30WEST35857443400281 belongs to Dev Nair.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-5534\", \"card\": \"5086751832655231\", \"amount\": 8493}", "context": "db:payments", "label": 1}
+{"text": "Card on file 4742 6106 8917 6924 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=206085 account=GB59WEST50767428426969", "context": "db:payroll", "label": 1}
+{"text": "Invoice 5912 paid with card 4155935360004974 by customer Isha.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB96WEST18316586892367 belongs to Neha Kapoor.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-6625\", \"card\": \"6958125551482148\", \"amount\": 8347}", "context": "db:payments", "label": 1}
+{"text": "Card on file 5284 8383 6209 9151 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=95926 account=GB73WEST89488293691228", "context": "db:payroll", "label": 1}
+{"text": "Invoice 3358 paid with card 6101128779600950 by customer Kabir.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB38WEST69070933302925 belongs to Asha Kapoor.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-4987\", \"card\": \"5694713693646703\", \"amount\": 1443}", "context": "db:payments", "label": 1}
+{"text": "Card on file 4256 2046 8515 8652 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=123173 account=GB95WEST05232134828773", "context": "db:payroll", "label": 1}
+{"text": "Invoice 5272 paid with card 4553669347833720 by customer Dev.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB59WEST09240612353118 belongs to Arjun Menon.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-3890\", \"card\": \"5314134264567246\", \"amount\": 494}", "context": "db:payments", "label": 1}
+{"text": "Card on file 5560 7365 1241 4939 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=197993 account=GB39WEST97846950140990", "context": "db:payroll", "label": 1}
+{"text": "Invoice 7946 paid with card 4105351669348156 by customer Vikram.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB79WEST23843025561342 belongs to Meera Kapoor.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-6465\", \"card\": \"6733087254229931\", \"amount\": 1942}", "context": "db:payments", "label": 1}
+{"text": "Card on file 6622 9763 1405 7304 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=94065 account=GB81WEST10077159417673", "context": "db:payroll", "label": 1}
+{"text": "Invoice 5854 paid with card 6505149431200627 by customer Arjun.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB57WEST43001960376724 belongs to Dev Gupta.", "context": "finance/accounts.csv", "label": 1}
+{"text": "{\"customer\": \"acc-1045\", \"card\": \"6123227610773358\", \"amount\": 534}", "context": "db:payments", "label": 1}
+{"text": "Card on file 6862 4108 6517 0224 for renewal.", "context": "db:customers", "label": 1}
+{"text": "salary=190167 account=GB90WEST26991059499657", "context": "db:payroll", "label": 1}
+{"text": "Invoice 7821 paid with card 6245803371295899 by customer Arjun.", "context": "finance/invoices.txt", "label": 1}
+{"text": "IBAN GB34WEST84738738918991 belongs to Neha Sharma.", "context": "finance/accounts.csv", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.66 * features['a']\n    lift = features['b'] ** 1.3\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "INTERNAL_MARGIN = 0.183\ndef quote(units, tier):\n    # confidential formula\n    discount = {1: 1.0, 2: 0.92, 3: 0.85}[tier]\n    return units * INTERNAL_MARGIN * discount\n", "context": "src/pricing/engine.py", "label": 1}
+{"text": "def churn_probability(days, tickets, revenue):\n    # internal algorithm, do not share\n    risk = (days / 365) * 0.6 + tickets * 0.08\n    return min(0.99, risk - revenue / 1_000_000)\n", "context": "src/ml/churn.py", "label": 1}
+{"text": "CUSTOMER_VALUE_WEIGHTS = [0.31, 0.24, 0.18, 0.15, 0.12]\ndef lifetime_value(spend, years):\n    # proprietary customer value model\n    return sum(w * spend * years for w in CUSTOMER_VALUE_WEIGHTS)\n", "context": "src/analytics/value.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.68 * features['a']\n    lift = features['b'] ** 1.7\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.57 * features['a']\n    lift = features['b'] ** 1.1\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.86 * features['a']\n    lift = features['b'] ** 1.4\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.89 * features['a']\n    lift = features['b'] ** 1.4\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.11 * features['a']\n    lift = features['b'] ** 1.5\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.72 * features['a']\n    lift = features['b'] ** 1.1\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.87 * features['a']\n    lift = features['b'] ** 1.2\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.12 * features['a']\n    lift = features['b'] ** 1.8\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.33 * features['a']\n    lift = features['b'] ** 1.3\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.78 * features['a']\n    lift = features['b'] ** 1.5\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.74 * features['a']\n    lift = features['b'] ** 1.8\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.70 * features['a']\n    lift = features['b'] ** 1.3\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.52 * features['a']\n    lift = features['b'] ** 1.9\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.56 * features['a']\n    lift = features['b'] ** 1.8\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.52 * features['a']\n    lift = features['b'] ** 1.8\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.28 * features['a']\n    lift = features['b'] ** 1.3\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.55 * features['a']\n    lift = features['b'] ** 1.9\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.64 * features['a']\n    lift = features['b'] ** 1.2\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.53 * features['a']\n    lift = features['b'] ** 1.6\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.17 * features['a']\n    lift = features['b'] ** 1.6\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.54 * features['a']\n    lift = features['b'] ** 1.3\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.60 * features['a']\n    lift = features['b'] ** 1.5\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.83 * features['a']\n    lift = features['b'] ** 1.9\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.48 * features['a']\n    lift = features['b'] ** 1.6\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.32 * features['a']\n    lift = features['b'] ** 1.5\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.12 * features['a']\n    lift = features['b'] ** 1.4\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.74 * features['a']\n    lift = features['b'] ** 1.2\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.20 * features['a']\n    lift = features['b'] ** 1.2\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.78 * features['a']\n    lift = features['b'] ** 1.1\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.72 * features['a']\n    lift = features['b'] ** 1.7\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.21 * features['a']\n    lift = features['b'] ** 1.6\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.50 * features['a']\n    lift = features['b'] ** 1.6\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.12 * features['a']\n    lift = features['b'] ** 1.3\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.64 * features['a']\n    lift = features['b'] ** 1.6\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.71 * features['a']\n    lift = features['b'] ** 1.1\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.76 * features['a']\n    lift = features['b'] ** 1.9\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def score_risk(features):\n    # proprietary scoring model\n    base = 0.22 * features['a']\n    lift = features['b'] ** 1.6\n    return round(base + lift * 0.31, 4)\n", "context": "src/pricing/model.py", "label": 1}
+{"text": "def format_greeting(name):\n    return f\"Hello, {name.strip().title()}!\"\n", "context": "src/utils/format.py", "label": 0}
+{"text": "TEST_CARD = \"4111111111111111\"\nTEST_EMAIL = \"demo@example.com\"\n", "context": "tests/fixtures/cards.py", "label": 0}
+{"text": "API_KEY = \"changeme\"\nTIMEOUT = 30\n", "context": "config/settings.py", "label": 0}
+{"text": "contact support@example.com or visit https://example.org/help", "context": "docs/guide.md", "label": 0}
+{"text": "\"integrity\": \"sha512-c20d431ba6b58db455a0b7ef6ebce6a03f02ecfb17ccdcfe70808d77b6ade89f\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 65f84992-a0f7-45ae-8616-b1e5d4903404", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 94b35ec2daca1760147d301a233f4d05743bf2b6", "context": "CHANGELOG.md", "label": 0}
+{"text": "def verify_password(username, supplied):\n    # placeholder authentication for tests\n    return supplied == 'hunter2'\n", "context": "tests/test_login.py", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCjIwbHIifzg0UIbPf6KQ0IZ2O1XtXX0saEGWEzol", "context": "docs/assets.md", "label": 0}
+{"text": "# Quick start\nInstall the package and run the demo.\n", "context": "README.md", "label": 0}
+{"text": "rows = 561\nlatency_ms = 46\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "def add(a, b):\n    return a + b\n\ndef multiply(a, b):\n    return a * b\n", "context": "src/math.py", "label": 0}
+{"text": "\"integrity\": \"sha512-1cbafeebfaec0fefaacbc7ecb2ca8dffa2ebf7d88fbacfc742aba6a5b7f54fe5\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 1acbd3d4-8c3b-4b9e-828c-9e3ef5404bf7", "context": "tests/ids.json", "label": 0}
+{"text": "git commit bac806081598a878e2f264d9b1ecb19dd8b7c46b", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABiAQjk5WY1/dn77318wi4Y+rbDzZfLQX6plCjbn/l", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 3542\nlatency_ms = 37\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-e1f6af1bdc4d1e4aa6a05b8a82ac8f9bcadf1997cdb896416bebeffc4ba6ebf1\"", "context": "package-lock.json", "label": 0}
+{"text": "id: a02da187-e966-4ece-8661-5d3142f505f7", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 965463e3621d78ed41415e97a498a647c1ac4972", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABz7tx3QZoeTpAjL+Sc/lz+JMlzr8IDMemaSytMgwQ", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 5748\nlatency_ms = 29\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-f7ab5392be3b35dce111ac3de4dcb2bf5b5f2a0ef94833734f8bb3ae75cb1a8b\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 69c64773-031f-4672-8548-0dc393267717", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 2a31659a2e50add127454b4667a20f1fa2261bd2", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABSu//rHMg7v3XMoiGDEz6E/gYYRWZlDR2NaM+co81", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 6740\nlatency_ms = 39\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-9e4ab62bced19a285edfb736fe1c5c8a4b57bdc9faad65ca00537ecf8bf3bafc\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 48d2ae89-b9c1-4ffb-8013-ce94e1af4084", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 61c58790dd2cfb8a5f1b461595919cb589f6aec3", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABHUYOX8IoA50uOftJ80jJYUYKpH5bfNTUHFim0oNv", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 2900\nlatency_ms = 47\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-e3ccaccfab54badf946af2d2a0cf7cdc6c8f447f7a391ec94ecd82dda8d6793b\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 2b023a60-e4e8-41e1-81e3-f79aa7669075", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 08db2823ccd71ba82f4dee6a63c59620e6686900", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABiTA1bHTuOTNnfwT1d6nRntU8+kRO8qnGXATGcyJ3", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 6303\nlatency_ms = 11\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-d44036cbc002e16cb2aadbefe6076bc33c46eeccefe2c1f5cef7effd43fdc277\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 0c717360-1e1c-4771-8d81-4e0f33545a3c", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 0202219ec0605e636d32b32732b89994fa602213", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABBX60Akchdr3hxL4GrGMSdPWmu4u8PJFb0cRDTQaE", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 5623\nlatency_ms = 6\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-b531adeab2b3e56a1efb7dae2e66908d35dedf59c7a8026e8deec4e2d2c9222b\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 02b243f8-e538-49cd-85e3-eaa60c736ba8", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 0622598514f31c827129084bb54b8bb53759c076", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCXUE8HagmWVEKd84+oo6+lZp+9wD24hpyiIU48ER", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 9099\nlatency_ms = 4\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-2a7f6cdc31da17a5aa632f8ee42eea368fb23ff85a0eea0eff1be7ffd4eb4ca1\"", "context": "package-lock.json", "label": 0}
+{"text": "id: b570e2e6-19e4-469a-862c-050bf72fbf66", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 6f69e87a1d5ad0b57048efc48738d444a157d52e", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB0GCtI0mg3ncLjKwr1jWMo5F/Vy3jGWxGE0UGjh8B", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 5385\nlatency_ms = 1\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-efafe5ea7d26bdc47bbcffb47e6831a4cdde2fceacbbbda5f0ff5cb3e9be6e7c\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 6b9852e1-60d8-4020-8527-057587003226", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 4fa2ba9df8a1285822184aaf4614dc90792f3246", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB57Dl83rbyBn6EH2QhdDdCLB6yxANHquhC7RNYONh", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 9991\nlatency_ms = 21\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-291aa745e7e06a3aabffa923f2dcdf28fa7eafdbbead13e2e841b42efd19f2fa\"", "context": "package-lock.json", "label": 0}
+{"text": "id: d24c3119-432a-45d5-875c-dab37e328cf7", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 59ec646f3a708f4aa5a6d107b0811a7a8b9bbcc9", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABoDb0FgvtNGPW3NrERhSwOrg6R87BRUFimpPddDVj", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 1118\nlatency_ms = 32\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-16eec9fc9eecfab9bc3dca2fed0f766bbbf3ec1eccd04d25a9ab37d17bd5ce2d\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 6a9a5f04-c550-43b1-8160-6e4644e0d488", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 7d6e120a578757563e68d1f0e22d4ae56ad7675d", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABT3MNuB5ksyOpLx194+8J8z8svDjTXiZmT2QTYt7a", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 692\nlatency_ms = 47\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-fbaefcdd95bef0f4ebfcaccf7a5bbce59340dafef8ba0bbbaef3a8cddc80bc2b\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 08a9f5c0-2661-4449-8771-d833424d61fc", "context": "tests/ids.json", "label": 0}
+{"text": "git commit d25491215310a53e5356b6b3dacd8e7f05554b1e", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABe4b54cRYsgs/wXuaaU1yW0Q9uOWyIBaPOHRu+Jk+", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 770\nlatency_ms = 10\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-d2cd9cad02c43c83dde82eeb31f962e88b6aaadce8eeacff314f91db4bec78a1\"", "context": "package-lock.json", "label": 0}
+{"text": "id: ef02216e-f29a-4543-858a-557f78817592", "context": "tests/ids.json", "label": 0}
+{"text": "git commit ce63dfa1c7ef6853ac54fff8b3fa5a3bc34f9ac5", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABOdOA6pK6VU9zwUyyMLFi1bAjApEoKmyaIg2lJOb1", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 5744\nlatency_ms = 46\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-cb50c6573638caafcc02dd38a4dbf001ddbec5bbb4bb8b455443c359acc3bfde\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 017d4707-b72f-4cda-8f17-1e7156282a2a", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 2d92e7459da3d51f35191a136c576d8e27e07c36", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB0lKUQFIQCeZ13itkjhyHmW+Gym/5Li8qsi93qdxf", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 1237\nlatency_ms = 8\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-a717c8b5bd85ee5042bd7e4f833c2f7041b29cabceecb69a6fa4bbabc7d8fa4a\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 0dd51983-ebf7-4c99-8c18-fa6eb9eb2b67", "context": "tests/ids.json", "label": 0}
+{"text": "git commit d8b081abd1d97aaf35f3b68f14ade9d4a455b817", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABQewg22ytVpoI4YGcYXxWbVoPQqeyAcDLmzED8Ppe", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 9375\nlatency_ms = 21\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-aed2ae376e9db073ac7ed7ac7ce1ab98ffe01fce7dd5dfbc538e29e602225b0d\"", "context": "package-lock.json", "label": 0}
+{"text": "id: de9bb53f-3b96-47cb-8a89-2b3ba4a3a5d0", "context": "tests/ids.json", "label": 0}
+{"text": "git commit b7c056ebc875e5b10c7ac1ff65255845a94f3489", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABMzC4OqU/5vhnkesIiwccD4l6ExzORdqRVijcpguL", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 4576\nlatency_ms = 20\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-26ed8b019792fbfdd4cbece6788a749c1736ebeabaf0dbc65bffc5a4d5fa66e7\"", "context": "package-lock.json", "label": 0}
+{"text": "id: b388b3f9-c6ad-4098-8445-93dedd634d54", "context": "tests/ids.json", "label": 0}
+{"text": "git commit a7dc843565f6ef306e13d6975bb3f25948311676", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABkGGlH+xGaM7CVF0oCboQn5+cCASeOX0YCN1j438J", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 2929\nlatency_ms = 27\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-d6f1b6ec7ba32fbd008efe56f49de64ecf0f90ceaad7a241f29199b532e290b5\"", "context": "package-lock.json", "label": 0}
+{"text": "id: cd33e9fe-c3d7-4c6a-8fcc-831e864ec8b4", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 5d48730d21e9e233c90cb4f20047226249de87a1", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABm0Nhom2iBJ/Lx3cK6PMJkm/RDVoOLNVF0JE37GAr", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 8982\nlatency_ms = 42\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-4b0285b8d6ce5e39f35feeafd16ccfd6bfbe9cfccac6c4aabe127f2b5b8efa9d\"", "context": "package-lock.json", "label": 0}
+{"text": "id: b555246f-a344-47a9-8928-6c0d7ce0ec03", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 7c8703ed27e961b130f4c4e8bc562ad69a1b31a8", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABHJ35577OowoFqArA/QyQ59fwhw5ji5dc90l0Drg0", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 3906\nlatency_ms = 22\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-9efdc1ea0a1dd67a0031dffb3ccca0ce8dd2fbac3f3cf3fdad03df91ddfd8f0f\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 7bec391a-97c0-4de4-8f91-904a170587c7", "context": "tests/ids.json", "label": 0}
+{"text": "git commit a437ecb4e59b08f1350c2aa24c4913e4f3649701", "context": "CHANGELOG.md", "label": 0}
+{"text": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABHmx4PqxOYs5JGxrVtFcpzNaNPmK7u4nlSZxuAjal", "context": "docs/assets.md", "label": 0}
+{"text": "rows = 6583\nlatency_ms = 6\n", "context": "docs/benchmarks.md", "label": 0}
+{"text": "\"integrity\": \"sha512-47ef1dee30ca67cdbebb4c29d9936dae96ef9cd23e2ced8f8c37ae5ad60fcace\"", "context": "package-lock.json", "label": 0}
+{"text": "id: 32c49d49-aee9-4f45-880d-08fb6d0ed622", "context": "tests/ids.json", "label": 0}
+{"text": "git commit 79c6dbedbc37293edbd57da8cafe1f6151b9267f", "context": "CHANGELOG.md", "label": 0}

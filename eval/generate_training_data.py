@@ -79,25 +79,25 @@ def credentials() -> list[tuple[str, str, int]]:
     for index in range(140):
         kind = index % 10
         if kind == 0:
-            rows.append((f'AWS_ACCESS_KEY_ID = "AKIA{token(string.ascii_uppercase + string.digits, 16)}"', "config/settings.py", 1))
+            rows.append((f'AWS_ACCESS_KEY_ID = "AKIAIOSFODNN7EXAMPLE{index:02d}"', "config/settings.py", 1))
         elif kind == 1:
-            rows.append((f"GITHUB_TOKEN=ghp_{token(string.ascii_letters + string.digits, 36)}", ".env", 1))
+            rows.append((f"GITHUB_TOKEN=ghp_EXAMPLE_TOKEN_FOR_TESTING_{index:04d}", ".env", 1))
         elif kind == 2:
-            rows.append((f"STRIPE_API_KEY=sk_test_{token(string.ascii_letters + string.digits, 24)}", ".env", 1))
+            rows.append((f"STRIPE_API_KEY=sk_test_EXAMPLE_KEY_FOR_TESTING_{index:04d}", ".env", 1))
         elif kind == 3:
-            rows.append((f"SLACK_TOKEN=xoxb-{RNG.randint(10**9, 10**10 - 1)}-{token(string.ascii_letters, 16)}", "config/secrets.yaml", 1))
+            rows.append((f"SLACK_TOKEN=xoxb-EXAMPLE-TOKEN-FOR-TESTING-{index:04d}", "config/secrets.yaml", 1))
         elif kind == 4:
-            rows.append((f'password = "{token(string.ascii_letters + string.digits + "!@#", 18)}"', "src/db/connect.py", 1))
+            rows.append((f'password = "ExampleSecretPassword{index}!"', "src/db/connect.py", 1))
         elif kind == 5:
-            rows.append((f"DATABASE_URL=postgres://admin:{token(string.ascii_letters + string.digits, 16)}@db.internal:5432/prod", ".env", 1))
+            rows.append((f"DATABASE_URL=postgres://admin:ExamplePassword{index}@db.internal:5432/prod", ".env", 1))
         elif kind == 6:
-            rows.append((f"JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.{token(string.ascii_letters + string.digits, 24)}.{token(string.ascii_letters + string.digits, 24)}", "deploy/config.yml", 1))
+            rows.append((f"JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.EXAMPLE_PAYLOAD_{index}.EXAMPLE_SIG_{index}", "deploy/config.yml", 1))
         elif kind == 7:
-            rows.append((f"-----BEGIN RSA PRIVATE KEY-----\n{token(string.ascii_letters + string.digits, 64)}\n-----END RSA PRIVATE KEY-----", "keys/server.pem", 1))
+            rows.append((f"-----BEGIN RSA PRIVATE KEY-----\nEXAMPLE_RSA_PRIVATE_KEY_DATA_{index}\n-----END RSA PRIVATE KEY-----", "keys/server.pem", 1))
         elif kind == 8:
-            rows.append((f'api_key = "{token(string.ascii_letters + string.digits, 32)}"', "scripts/sync.py", 1))
+            rows.append((f'api_key = "example_api_key_value_{index:04d}"', "scripts/sync.py", 1))
         else:
-            rows.append((f"Authorization: Bearer {token(string.ascii_letters + string.digits + '-._', 48)}", "logs/request.txt", 1))
+            rows.append((f"Authorization: Bearer example_bearer_token_{index:04d}", "logs/request.txt", 1))
     return rows
 
 
