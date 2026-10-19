@@ -77,7 +77,9 @@ two separate listeners (MCP `/mcp` only on 8001, dashboard routes only on 8000).
 
 Evidence: `test_mcp.py` drives the real server with the SDK client;
 `demo/run_demo.py --auto-approve --assert` passes **29/29** checks including
-blocked `.env` reads, masked customer rows and the kill switch; all five
+blocked `.env` reads, masked customer rows and the kill switch (that count is
+from a run where the demo starts its own gateway; against a separately started
+gateway the application-log check is skipped, see Phase 8); all five
 `eval/attacks/attack_*.py` report `RESULT: stopped`.
 
 Skipped: nothing.
@@ -114,7 +116,10 @@ The demo is the scripted eight-step attack from `docs/08`. The evaluation is a
 hand-written 224-item dataset with a keyword baseline, and every number is in
 `eval/results/results.md`.
 
-Evidence: `make demo` → 29 checks passed, 0 failed; `make eval` →
+Evidence: `make demo` → 29 checks passed, 0 failed when the demo starts its
+own gateway; against a gateway already started with `make run`, check 8c is
+skipped because that gateway's log is not visible to the script, so the run is
+28 passed, 1 skipped, 0 failed; `make eval` →
 detection 0.8278, false-positive rate 0.1644, precision 0.9124, F1 0.8681,
 context accuracy 0.5238 over 21 pairs, decision accuracy 0.7232, injection
 resistance 5/5, latency median 11.51 ms / p95 18.68 ms over 552 calls,
@@ -165,13 +170,13 @@ Skipped: nothing else.
 |---|---|---|
 | Tests | `make test` | 239 passed |
 | Lint | `make lint` | exit 0, no errors |
-| Demo | `make demo` | 29 checks passed, 0 failed |
+| Demo | `make demo` | 29 passed, 0 failed (own gateway); 28 passed + 1 skipped (separately started gateway) |
 | Tamper | `make tamper-demo` | tampering detected on the copy; ledger SHA-256 unchanged |
 | Attacks | `eval/attacks/attack_*.py` | 5/5 stopped |
 | Eval | `make eval` | see `eval/results/results.md` (3 of 5 targets missed, reported) |
 | Isolation (Docker) | `docker compose exec -T agent python scripts/verify_isolation.py` | 5/5 PASS |
 | Frontend build | `npm run build` | TypeScript clean, CSS 31.79 kB |
-| Fresh clone | `make setup && make seed && make train-model && make test && make lint` | all green (see README) |
+| Fresh clone | `make setup && make seed && make train-model && make test && make lint` | all green: 239 tests passed, lint clean (re-checked on a fresh clone on 2026-10-19) |
 
 ## Known limitations
 
