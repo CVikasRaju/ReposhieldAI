@@ -433,3 +433,21 @@ async def test_verify_detects_a_tampered_copy(tmp_path: Path) -> None:
         assert clean.ok is True
     finally:
         gateway.audit.close()
+
+
+async def test_policy_sample_and_create_endpoints(tmp_path: Path) -> None:
+    gateway = make_gateway(tmp_path)
+    try:
+        async with running_server(gateway.api_app) as base:
+            async with httpx.AsyncClient(base_url=base, timeout=5.0, headers=HEADERS) as client:
+                res = await client.get("/api/policy/sample")
+                assert res.status_code == 200
+                data = res.json()
+                assert data["filename"] == ".aishield"
+                assert "profile: developer" in data["yaml"]
+
+                create_res = await client.post("/api/policy/create-sample", json={"overwrite": True})
+                assert create_res.status_code == 200
+                assert create_res.json()["ok"] is True
+    finally:
+        gateway.audit.close()

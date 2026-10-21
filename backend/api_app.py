@@ -42,6 +42,7 @@ from backend.core.reasons import ReasonCode
 from backend.core.sessions import SessionManager
 from backend.core.snapshots import SnapshotManager
 from backend.policy.models import Policy
+from backend.policy.sample import get_sample_policy_yaml, write_sample_policy
 
 VERSION = "0.1.0"
 DASHBOARD_ORIGIN = "http://localhost:5173"
@@ -59,6 +60,12 @@ class DashboardDeps:
     sessions: SessionManager
     snapshots: SnapshotManager
     bus: EventBus
+
+
+class CreatePolicySampleRequest(BaseModel):
+    """Request to create or initialize a sample .aishield file."""
+
+    overwrite: bool = False
 
 
 class ResolveRequest(BaseModel):
@@ -524,6 +531,38 @@ def create_api_app(deps: DashboardDeps) -> FastAPI:
                 "channels": list(deps.policy.approval.channels),
             },
             "limits": deps.policy.limits.model_dump(mode="json"),
+            "policy_path": str(deps.settings.policy_abs),
+            "file_exists": deps.settings.policy_abs.exists(),
+        }
+
+    @app.get("/api/policy/sample")
+    async def get_policy_sample() -> dict[str, Any]:
+        """Return the sample .aishield template and file status."""
+        return {
+            "filename": ".aishield",
+            "yaml": get_sample_policy_yaml(),
+            "exists": deps.settings.policy_abs.exists(),
+            "policy_path": str(deps.settings.policy_abs),
+        }
+
+    @app.post("/api/policy/create-sample")
+    async def create_policy_sample(
+        body: CreatePolicySampleRequest | None = None,
+    ) -> dict[str, Any]:
+        """Create or initialize a sample .aishield policy in the workspace."""
+        overwrite = body.overwrite if body else False
+        written = await asyncio.to_thread(
+            write_sample_policy, deps.settings.policy_abs, overwrite=overwrite
+        )
+        return {
+            "ok": True,
+            "created": written,
+            "message": (
+                "Policy file written successfully."
+                if written
+                else "Policy file already exists."
+            ),
+            "path": str(deps.settings.policy_abs),
         }
 
     @app.get("/api/metrics/summary")

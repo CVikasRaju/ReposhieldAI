@@ -29,6 +29,7 @@ from backend.engines.content_model import ContentModel
 from backend.engines.text_masker import MaskMapStore
 from backend.mcp_app import create_mcp_app
 from backend.policy.loader import load_policy
+from backend.policy.sample import write_sample_policy
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +65,10 @@ def build_gateway(
     settings = settings or get_settings()
     _secure_directory(settings.data_abs)
     settings.workspace_abs.mkdir(parents=True, exist_ok=True)
+
+    if not settings.policy_abs.exists():
+        write_sample_policy(settings.policy_abs)
+        logger.info("Initialized default .aishield at %s", settings.policy_abs)
 
     policy = load_policy(settings.policy_abs, settings.profile)
     database = Path(policy.paths.database)
@@ -189,6 +194,16 @@ def main() -> int:
         level=os.environ.get("RS_LOG_LEVEL", "INFO").upper(),
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
+    if len(sys.argv) > 1 and sys.argv[1] in {"--init", "-i", "init"}:
+        target = Path(sys.argv[2]) if len(sys.argv) > 2 else Path.cwd()
+        target_file = (target / ".aishield") if target.is_dir() else target
+        written = write_sample_policy(target_file, overwrite=True)
+        if written:
+            print(f"Created sample .aishield at {target_file.resolve()}", flush=True)
+        else:
+            print(f"Sample .aishield already exists at {target_file.resolve()}", flush=True)
+        return 0
+
     settings = get_settings()
     gateway = build_gateway(settings)
     print(banner(gateway), flush=True)

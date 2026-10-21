@@ -149,6 +149,22 @@ export interface PolicyView {
   protect: Array<Record<string, unknown>>;
   approval: { timeout_seconds: number; channels: string[] };
   limits: Record<string, unknown>;
+  policy_path?: string;
+  file_exists?: boolean;
+}
+
+export interface PolicySample {
+  filename: string;
+  yaml: string;
+  exists: boolean;
+  policy_path: string;
+}
+
+export interface CreatePolicyResult {
+  ok: boolean;
+  created: boolean;
+  message: string;
+  path: string;
 }
 
 export interface ChainVerification {

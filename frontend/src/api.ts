@@ -6,7 +6,9 @@ import type {
   EventRow,
   GraphPayload,
   MetricsSummary,
+  PolicySample,
   PolicyView,
+  CreatePolicyResult,
   Resolution,
   ResolveResult,
   RollbackResult,
@@ -94,6 +96,12 @@ export const api = {
     }),
   verifyLog: () => request<ChainVerification>("/api/log/verify"),
   policy: () => request<PolicyView>("/api/policy"),
+  policySample: () => request<PolicySample>("/api/policy/sample"),
+  createSamplePolicy: (overwrite = false) =>
+    request<CreatePolicyResult>("/api/policy/create-sample", {
+      method: "POST",
+      body: JSON.stringify({ overwrite }),
+    }),
   metrics: (sessionId?: string) =>
     request<MetricsSummary>(
       `/api/metrics/summary${sessionId ? `?session_id=${encodeURIComponent(sessionId)}` : ""}`,

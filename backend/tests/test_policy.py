@@ -171,3 +171,22 @@ def test_every_profile_parses() -> None:
     for name in PROFILE_NAMES:
         policy = parse_policy({"profile": name})
         assert policy.profile == name
+
+
+def test_sample_policy_template_and_generator(tmp_path: Path) -> None:
+    import yaml
+
+    from backend.policy.sample import get_sample_policy_yaml, write_sample_policy
+
+    content = get_sample_policy_yaml()
+    assert "version: 1" in content
+    assert "profile: developer" in content
+    parsed = yaml.safe_load(content)
+    policy = parse_policy(parsed)
+    assert policy.profile == "developer"
+
+    target = tmp_path / ".aishield"
+    assert write_sample_policy(target) is True
+    assert target.is_file()
+    assert write_sample_policy(target, overwrite=False) is False
+    assert write_sample_policy(target, overwrite=True) is True

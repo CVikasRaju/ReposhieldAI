@@ -13,7 +13,7 @@ endif
 export PYTHONPATH :=
 
 .PHONY: setup seed train-model run demo eval test lint docker-up \
-        verify-isolation tamper-demo clean-data frontend dashboard
+        verify-isolation tamper-demo clean-data frontend dashboard init
 
 setup:
 	$(PYTHON) -m venv .venv
@@ -23,6 +23,9 @@ setup:
 seed:
 	$(PY) scripts/seed_workspace.py
 	$(PY) scripts/seed_db.py
+
+init:
+	$(PY) -m backend.main --init
 
 train-model:
 	$(PY) eval/train_content_model.py

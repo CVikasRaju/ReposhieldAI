@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { useStore } from "../store";
 import type { ChainVerification } from "../types";
+import { PolicyModal } from "./PolicyModal";
 
 const STATUS_STYLE: Record<string, string> = {
   active: "bg-emerald-500/15 text-emerald-300 border-emerald-500/40",
@@ -24,6 +25,7 @@ export function Header() {
 
   const [banner, setBanner] = useState<ChainVerification | null>(null);
   const [busy, setBusy] = useState(false);
+  const [policyModalOpen, setPolicyModalOpen] = useState(false);
   const timer = useRef<number | undefined>(undefined);
 
   const pending = approvals.filter(
@@ -80,9 +82,24 @@ export function Header() {
         </select>
 
         {policy ? (
-          <span className="rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs text-zinc-300">
-            {policy.profile} · {policy.mode}
-          </span>
+          <button
+            type="button"
+            onClick={() => setPolicyModalOpen(true)}
+            title="Click to view policy or generate .aishield template"
+            className="group flex items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs text-zinc-300 hover:border-emerald-500/50 hover:bg-zinc-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+          >
+            <span>🛡️ Policy:</span>
+            <strong className="text-emerald-400 group-hover:underline">
+              {policy.profile}
+            </strong>
+            <span className="text-zinc-500">·</span>
+            <span>{policy.mode}</span>
+            {policy.file_exists === false ? (
+              <span className="ml-1 rounded bg-amber-500/20 px-1 text-[10px] text-amber-300">
+                no file
+              </span>
+            ) : null}
+          </button>
         ) : null}
 
         <span
@@ -154,6 +171,11 @@ export function Header() {
             : `Tampering detected at entry #${banner.first_bad_seq ?? "?"}`}
         </p>
       ) : null}
+
+      <PolicyModal
+        isOpen={policyModalOpen}
+        onClose={() => setPolicyModalOpen(false)}
+      />
     </header>
   );
 }

@@ -8,7 +8,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
 [![MCP](https://img.shields.io/badge/MCP-Official%20FastMCP-orange.svg)](https://modelcontextprotocol.io/)
 [![Frontend: React 19 + Tailwind](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Tailwind%204-61DAFB.svg)](frontend/)
-[![Tests: 239 Passed](https://img.shields.io/badge/Tests-239%20Passed-success.svg)](backend/tests/)
+[![Tests: 241 Passed](https://img.shields.io/badge/Tests-241%20Passed-success.svg)](backend/tests/)
 
 ---
 
@@ -127,7 +127,29 @@ make eval         # Runs 568-call quantitative evaluation benchmark
 
 ## 🚀 How to Run
 
-### Method A: Local Interactive Mode (Developer Workspace)
+### ⚡ Option 1: 1-Click All-in-One Launcher (Recommended)
+
+RepoShield provides single-click launchers that spin up the Gateway process, boot the Vite dashboard, and automatically launch your default browser pre-authenticated with your session token in one step:
+
+- **Windows:** Double-click `start.bat` (or run `.\start.ps1` in PowerShell).
+- **macOS / Linux:** Run `./start.sh` in your terminal.
+
+```powershell
+# Windows PowerShell
+.\start.ps1
+```
+
+```bash
+# Linux / macOS
+chmod +x ./start.sh
+./start.sh
+```
+
+The script will automatically detect your environment, generate a fresh `.aishield` policy if missing, start both listeners, and open `http://localhost:5173/#token=...` directly in your browser.
+
+---
+
+### Option 2: Manual Interactive Mode (Developer Workspace)
 
 1. **Start the RepoShield Gateway:**
    ```bash
@@ -150,7 +172,7 @@ make eval         # Runs 568-call quantitative evaluation benchmark
 
 ---
 
-### Method B: Hardened Docker Sandbox (Zero-Trust Production Mode)
+### Option 3: Hardened Docker Sandbox (Zero-Trust Production Mode)
 
 In production or untrusted evaluation environments, the AI agent must run inside a container with **no access to the host network**, **no workspace volume mounts**, and **no approver token**:
 
@@ -229,7 +251,15 @@ async with streamable_http_client("http://127.0.0.1:8001/mcp") as (read, write):
 
 ## ⚙️ Security Policy (`.aishield`)
 
-Security policies are declared in `.aishield` at the repository root. Built-in profiles include `developer`, `business`, `student`, and `strict`:
+Security policies are declared in `.aishield` at the repository root. Built-in profiles include `developer`, `business`, `student`, and `strict`.
+
+### Automatic Policy Initialization & UI Generator
+You never need to manually write `.aishield` from scratch:
+- **CLI Initialization:** Run `make init` or `python -m backend.main --init [target_dir]` to stamp a sample policy in any workspace.
+- **Auto-Boot:** If RepoShield starts up in a directory without an `.aishield` file, it automatically generates a safe starter policy.
+- **Dashboard Modal:** Click the **🛡️ Policy** badge in the top navigation bar of the dashboard (`http://localhost:5173`) to view the full template, copy YAML, download `.aishield`, or click **Create / Save in Project** with one click.
+
+Here is an example policy configuration:
 
 ```yaml
 version: 1
