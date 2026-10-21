@@ -1,123 +1,362 @@
 # RepoShield AI
 
-A control and privacy layer for AI agents. Every action an agent attempts on files, shell commands, a database or the network passes through RepoShield first. RepoShield decides to **allow**, **mask**, **hold for human approval** or **block**, and records the outcome in a tamper-evident audit log with a live dashboard.
+> **A zero-trust runtime security gateway and context-aware privacy shield for autonomous AI agents.**  
+> Intercepts tool calls (files, shell, SQLite, network), scores risk via 4-signal offline inference, masks secrets with structure-preserving placeholders, requires human-in-the-loop (HITL) approval for destructive actions, and cryptographically signs every event into a tamper-evident hash-chained audit ledger.
 
-It targets two hackathon problem statements at once:
-
-- **PS 2.1 AI Agent Safety and Control:** monitor and control what an agent does, block harmful actions, show an audit interface.
-- **PS 2.2 Context-Aware Data Privacy:** decide what is sensitive from context, not keywords, then redact or restrict it before the AI sees it.
-
-The product is for anyone running AI agents: developers, business teams, students and researchers. Policy **profiles** (developer, business, student, strict) give each group sensible defaults, and every decision is explained in plain language.
-
----
-
-## What it does
-
-1. **Intercepts** every tool call from the agent through an MCP gateway. The agent runs in a sandbox where the gateway is the only path to data.
-2. **Classifies** each action by risk tier and each piece of data by sensitivity, using four signals: patterns, location, an offline content model and session behaviour.
-3. **Decides** with a strictest-wins rule: ALLOW, MASK, HOLD or BLOCK.
-4. **Freezes** held calls until a human approves (terminal or web), edits the approval to "with masking", or stops it.
-5. **Masks** sensitive content with structure-preserving placeholders and restores the originals when the agent writes the file back.
-6. **Protects** against destructive actions with snapshots and one-click Undo, and against exfiltration with an egress gate.
-7. **Records** everything in a hash-chained ledger, shown in a live dashboard with a knowledge graph, a raw-vs-sanitized diff and a plain-language feed.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python: 3.11+](https://img.shields.io/badge/Python-3.11+-brightgreen.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
+[![MCP](https://img.shields.io/badge/MCP-Official%20FastMCP-orange.svg)](https://modelcontextprotocol.io/)
+[![Frontend: React 19 + Tailwind](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Tailwind%204-61DAFB.svg)](frontend/)
+[![Tests: 239 Passed](https://img.shields.io/badge/Tests-239%20Passed-success.svg)](backend/tests/)
 
 ---
 
-## Documentation map
+## 🌟 Overview & Key Problem Solved
 
-| File | Read it when you need |
-|---|---|
-| `AGENTS.md` | The rules the building agent must follow. Read first. |
-| `docs/01-PRODUCT.md` | Problem, users, requirement IDs, scope |
-| `docs/02-ARCHITECTURE.md` | Threat model, components, request lifecycle, repo layout, sandbox |
-| `docs/03-POLICY-AND-SCORING.md` | `.aishield` format, profiles, detectors, score formula, decisions, reason codes |
-| `docs/04-CONNECTORS-AND-API.md` | MCP tools, connector behaviour, dashboard REST and WebSocket API |
-| `docs/05-DATA-AND-AUDIT.md` | SQLite schema, hash chain, snapshots, rollback |
-| `docs/06-MASKING.md` | Text, Python AST and table masking, restore-on-write |
-| `docs/07-DASHBOARD.md` | Frontend screens, components, realtime behaviour |
-| `docs/08-DEMO-AND-EVAL.md` | Seed data, the scripted attack demo, evaluation harness and metrics |
-| `docs/09-BUILD-PLAN.md` | Phases, acceptance criteria and paste-ready prompts for the building agent |
+When AI coding agents (Claude Code, Cursor, Cline, Devin, AutoGen, CrewAI) operate directly on developer workstations or enterprise infrastructure, they present severe security and governance risks:
+1. **Prompt Injection & Over-reach:** Hidden prompts in documentation or data can coerce agents into exfiltrating environment secrets (`.env`, private keys).
+2. **Destructive Operations:** Hallucinated commands (`rm -rf`, `DROP TABLE`, force pushes, unconstrained `DELETE`).
+3. **Data Privacy & Exfiltration:** Accidental transmission of sensitive customer PII, credentials, or proprietary intellectual property to untrusted remote endpoints.
+4. **Lack of Verifiable Auditability:** Traditional logs can be edited, deleted, or fabricated.
+
+**RepoShield AI** solves this by establishing a strict perimeter outside the agent's application runtime. Rather than granting agents direct access to the local machine, the agent connects via the standardized **Model Context Protocol (MCP)**. Every single action is inspected, evaluated against policies, scored with offline ML, held for approval if risky, masked if sensitive, and logged to an immutable hash chain.
 
 ---
 
-## Quickstart (local mode)
+## 🛡️ Core Capabilities
 
-```bash
-make setup          # create .venv and install backend dependencies
-make seed           # write workspace/ and workspace/business.db (synthetic data only)
-make train-model    # train the offline content model (deterministic)
-make test           # unit and integration tests
-make lint           # ruff
-
-make run            # gateway: MCP on :8001 (agent side), dashboard API on :8000
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│          Autonomous AI Agent (Claude Code / Cursor / Cline / Custom)    │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ Tool Calls (Port 8001: /mcp only)
+┌───────────────────────────────────▼────────────────────────────────────┐
+│                       RepoShield Gateway Process                       │
+│                                                                        │
+│  Pipeline: Session Resolution ➔ Path Jail ➔ Hard Policy Rules ➔        │
+│            Detectors ➔ 4-Signal Scorer ➔ Strictest-Wins Decision       │
+│                                                                        │
+│  [ALLOW] ──────────► [Snapshot State] ──────► [Execute & Mask Output]  │
+│  [MASK]  ──────────► [AST / Table Masker] ──► [Store Placeholder Map]  │
+│  [HOLD]  ──────────► [Freeze asyncio] ──────► [HITL: Terminal / Web]  │
+│  [BLOCK] ──────────► [Fail-Closed] ─────────► [Generic Error Notice]   │
+│                                                                        │
+│  Ledger: Canonical JSON ➔ SHA-256 Hash Chaining ➔ SQLite WAL Mode      │
+└────────┬───────────────────┬──────────────────┬────────────────────────┘
+         │                   │                  │
+    workspace/           subprocess         app.db / SQLite
+ (Filesystem Tool)    (Command Gateway)    (Database Connector)
+         ▲
+         │ WebSocket Events & Approvals (/api/* & /ws, Port 8000, Token Auth)
+┌────────┴───────────────────────────────────────────────────────────────┐
+│              Live Interactive Dashboard (React 19 + Cytoscape)         │
+│  Knowledge Graph · Live Approvals · Raw/Sanitized Diff · Audit Ledger  │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
-`make setup` uses `python3` on Linux and macOS and `python` on Windows. Pass
-`PYTHON=/path/to/python3` if neither is on PATH.
+- **Dual-Listener Zero-Trust Isolation:**
+  - **Port 8001 (`/mcp`):** Dedicated exclusively to agent interactions. Exposes no approval routes, no admin endpoints, and leaks no policy details.
+  - **Port 8000 (`/api/*`, `/ws`):** Dedicated exclusively to human operators. Protected by constant-time `RS_APPROVER_TOKEN` authentication.
+- **4-Signal Sensitivity & Risk Scoring:**
+  - Evaluates **Pattern** (regex + entropy), **Location** (file path & table sensitivity hints), **Content Model** (offline scikit-learn TF-IDF + Logistic Regression running <20ms), and **Behavior** (sliding-window anomaly detection, scope mismatch, consecutive blocked attempts).
+  - Decision Matrix: `ALLOW` < `MASK` < `HOLD` < `BLOCK` (*strictest always wins*).
+- **Structure-Preserving Masking & Restore-on-Write:**
+  - Replaces sensitive function bodies in Python ASTs with indentation-preserving markers (`/* [MASKED_LOGIC_BLOCK_01] */`) and customer PII with typed placeholders (`[EMAIL_1]`, `[CARD_1]`).
+  - When the agent writes the file back, RepoShield matches placeholders against the session map and seamlessly restores original values.
+- **Dual-Channel Human-in-the-Loop (HITL) Freeze:**
+  - Risky actions trigger an in-memory `asyncio.Event` freeze. Reviewers resolve via terminal CLI or the web dashboard with `APPROVE`, `EDIT` (approve with forced masking), or `STOP` (deny).
+- **Snapshot & One-Click Undo:**
+  - Automatic atomic filesystem copies and SQLite transaction backups prior to Tier 2/3 writes. Revert unwanted changes instantly with a single click.
+- **Tamper-Evident Canonical Hash-Chained Audit Ledger:**
+  - Every event is signed with `SHA-256(prev_hash + canonical_json(event))`. Any alteration of audit records immediately breaks the chain at that exact sequence number.
 
-In a second terminal:
+---
+
+## 📸 Interactive Dashboard
+
+RepoShield includes a high-performance React dashboard featuring:
+- **Interactive Knowledge Graph:** Live graph visualization of files, tables, and external endpoints color-coded by access state (Green: Allowed, Amber: Held, Red: Blocked, Blue: Masked).
+- **Real-Time HITL Approval Cards:** Review pending requests with full risk breakdowns, preview diffs, and choose whether to approve, mask, or deny.
+- **Sanitization Delta View:** Side-by-side comparison showing raw sensitive data vs. what the agent was actually allowed to observe.
+- **Cryptographic Ledger Verifier:** In-browser verification button confirming linear hash-chain integrity.
+
+| Live Dashboard & Graph | Sanitization Delta (Raw vs Masked) |
+|:---:|:---:|
+| ![Dashboard](docs/screenshots/01-dashboard.png) | ![Delta View](docs/screenshots/03-delta.png) |
+
+| Live HITL Approval Cards | Cryptographic Ledger Verification |
+|:---:|:---:|
+| ![Approval Card](docs/screenshots/06-approval.png) | ![Verify Log](docs/screenshots/02-verify-log.png) |
+
+---
+
+## ⚡ Quickstart
+
+### 1. Installation & Environment Setup
+
+Clone the repository and initialize the virtual environment:
 
 ```bash
-make dashboard      # Vite dev server on http://localhost:5173
-make demo           # eight-step scripted attack, with assertions
-make eval           # metrics vs the keyword baseline, writes eval/results/
-make tamper-demo    # proves the hash chain detects edits on a copy
+git clone https://github.com/CVikasRaju/TAI.git
+cd TAI
+
+# 1. Setup virtual environment & dependencies
+make setup
+
+# 2. Seed synthetic workspace and business database
+make seed
+
+# 3. Train the offline content classifier
+make train-model
 ```
 
-On startup the gateway prints an **approver token** and a dashboard URL such as
-`http://localhost:5173/#token=<token>`. Open that URL. Every API call and
-WebSocket connection requires the token; it stays in the page's memory only.
+### 2. Verify Your Environment
 
-`make demo` starts its own gateway when none is running. When one is already
-running, export the same token first (`RS_APPROVER_TOKEN=... make demo`) and the
-demo reuses it so the dashboard shows the steps live.
-
-### Hardened mode (Docker sandbox)
+Run the full automated test suite, code linter, attack demo, and tamper proof:
 
 ```bash
-make seed                                  # the gateway mounts workspace/ read-write
+make test         # Runs 239 pytest unit and integration tests
+make lint         # Verifies Ruff code formatting & linting rules
+make demo         # Executes 8-step scripted attack verification suite
+make tamper-demo  # Demonstrates cryptographic audit ledger tampering detection
+make eval         # Runs 568-call quantitative evaluation benchmark
+```
+
+---
+
+## 🚀 How to Run
+
+### Method A: Local Interactive Mode (Developer Workspace)
+
+1. **Start the RepoShield Gateway:**
+   ```bash
+   make run
+   ```
+   The gateway initializes both listeners and displays your startup banner:
+   ```text
+     RepoShield AI is running
+     MCP gateway (agent side):   http://127.0.0.1:8001/mcp
+     Dashboard API (human side): http://127.0.0.1:8000
+     Approver token:             <AUTOGENERATED_SECRET_TOKEN>
+     Open the dashboard:         http://localhost:5173/#token=<AUTOGENERATED_SECRET_TOKEN>
+   ```
+
+2. **Launch the Dashboard UI (in a separate terminal):**
+   ```bash
+   make dashboard
+   ```
+   Open `http://localhost:5173/#token=<AUTOGENERATED_SECRET_TOKEN>` in your browser to inspect live agent activity.
+
+---
+
+### Method B: Hardened Docker Sandbox (Zero-Trust Production Mode)
+
+In production or untrusted evaluation environments, the AI agent must run inside a container with **no access to the host network**, **no workspace volume mounts**, and **no approver token**:
+
+```bash
+# Generate approver token
 export RS_APPROVER_TOKEN=$(python -c "import secrets; print(secrets.token_urlsafe(24))")
-docker compose up --build -d               # gateway (healthy), agent, collector
-make verify-isolation                      # five checks inside the agent container
-docker compose exec -T agent python simulated_agent.py   # the demo, from the sandbox
-export RS_APPROVER_TOKEN=... ; open http://localhost:5173/#token=$RS_APPROVER_TOKEN
+
+# Build and start gateway, agent sandbox, and demo collector
+docker compose up --build -d
+
+# Verify all 5 sandbox isolation boundaries pass
+make verify-isolation
+
+# Run the agent demo from inside the isolated container
+docker compose exec -T agent python simulated_agent.py
 ```
 
-The dashboard is published on `127.0.0.1:8000` only. The agent container has no
-workspace, no policy, no data and no approver token, and its only network is the
-internal one that reaches the gateway.
-
-### Ports
-
-| Port | Serves | Reachable by |
-|---|---|---|
-| 8001 | MCP endpoint `/mcp` only | The agent (and, in Docker, only `agent_net`) |
-| 8000 | Dashboard API `/api/*` and `/ws` only | Humans (loopback). Token required. |
-
-The two ports are separate listeners. The MCP port never serves an approval route.
+The gateway exposes port `8000` to `127.0.0.1` only. The agent container is connected strictly to `agent_net` (an internal, unrouted Docker network) where it can reach only `http://gateway:8001/mcp`.
 
 ---
 
-## Using this pack with an AI coding agent
+## 🔌 Connecting Real AI Agents
 
-1. Copy `README.md`, `AGENTS.md` and `docs/` into a new repo named `reposhield-ai`.
-2. If your tool has its own rules file (`CLAUDE.md`, `.windsurfrules`, Antigravity rules), make it a single line: `Read and follow AGENTS.md.`
-3. Open `docs/09-BUILD-PLAN.md`. Paste the prompt for Phase 0, let the agent finish, check the acceptance criteria, then move to the next phase.
-4. Build in order. Each phase depends on the previous one.
+RepoShield provides 8 standard tools conforming to the **Model Context Protocol (MCP)**:
+- **Filesystem:** `list_directory`, `read_file`, `write_file`, `delete_file`
+- **Shell / Command:** `run_command` (no shell execution, path-argument analysis, allowlist/denylist)
+- **Database:** `db_schema`, `db_query` (SQLite read/write with automatic snapshots)
+- **Network:** `http_request` (outbound egress filtering, SSRF prevention)
+
+### 1. Claude Desktop / Claude Code
+Add RepoShield to your `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "reposhield": {
+      "url": "http://127.0.0.1:8001/mcp"
+    }
+  }
+}
+```
+
+### 2. Cursor IDE
+Navigate to **Settings** ➔ **Features** ➔ **MCP**:
+- **Name:** `RepoShield`
+- **Type:** `SSE` / `HTTP`
+- **URL:** `http://127.0.0.1:8001/mcp`
+
+### 3. Cline / Roo Code / Windsurf
+Add to your extension's MCP server configuration:
+```json
+{
+  "mcpServers": {
+    "reposhield": {
+      "url": "http://127.0.0.1:8001/mcp",
+      "transport": "streamable-http"
+    }
+  }
+}
+```
+
+### 4. Custom Python Agents (LangChain, LlamaIndex, AutoGen, CrewAI)
+Connect via the official MCP Python SDK:
+```python
+from mcp.client.streamable_http import streamable_http_client
+from mcp import ClientSession
+
+async with streamable_http_client("http://127.0.0.1:8001/mcp") as (read, write):
+    async with ClientSession(read, write) as session:
+        await session.initialize()
+        tools = await session.list_tools()
+        result = await session.call_tool("read_file", {"path": "src/app.py"})
+        print(result.content)
+```
 
 ---
 
-## Honest scope
+## ⚙️ Security Policy (`.aishield`)
 
-- Protection holds while the agent runs inside the RepoShield sandbox and reaches data only through the gateway. An agent with its own unrestricted shell can bypass any proxy, which is why the sandbox is part of the design.
-- Masked code is for comprehension, not execution.
-- The offline content model is small and trained on synthetic data. Its numbers are reported as measured, with a keyword-only baseline for comparison; the misses are listed in `eval/results/results.md`.
-- The optional process watchdog is a local-mode detection layer only; container isolation comes from the Docker topology.
-- Anti-training canary traps and watermarking are out of scope. See `docs/01-PRODUCT.md`.
+Security policies are declared in `.aishield` at the repository root. Built-in profiles include `developer`, `business`, `student`, and `strict`:
 
-## Where to look
+```yaml
+version: 1
+profile: developer
+mode: strict
 
-- `docs/PROGRESS.md` — per-phase status with the command and result behind it.
-- `eval/results/results.md` — measured metrics, per-category breakdown and every failure.
-- `docs/screenshots/` — the dashboard captured from a live gateway.
-- `docs/DECISIONS.md` — every deviation from the specification and why.
+# Scope: Define what the agent is assigned to accomplish
+task:
+  description: "Refactor database migrations and update service models"
+  scope_paths: ["src/**", "tests/**", "README.md"]
+
+paths:
+  workspace: ./workspace
+  database: ./workspace/business.db
+
+# Hard Path & Table Protection
+protect:
+  - { kind: path,  match: "**/.env*",    read: block, write: block, delete: block }
+  - { kind: path,  match: "**/*.pem",    read: block, write: block, delete: block }
+  - { kind: path,  match: "**/id_rsa*",  read: block, write: block, delete: block }
+  - { kind: path,  match: "**/*.db",     read: block, write: block, delete: block }
+  - { kind: path,  match: "src/auth/**", read: mask,  write: hold,  delete: block }
+  - kind: table
+    match: customers
+    read: hold
+    write: hold
+    delete: block
+    columns: [full_name, email, phone, national_id]
+
+# Sensitivity weight hints for scoring
+hints:
+  - { match: "src/pricing/**", weight: 0.6 }
+  - { match: "config/**",      weight: 0.5 }
+
+# Command rules (Executed with NO shell)
+commands:
+  allow:
+    - "git status"
+    - "git diff*"
+    - "pytest*"
+  destructive:
+    - "rm -rf *"
+    - "git push --force*"
+  deny:
+    - "curl *"
+    - "wget *"
+    - "nc *"
+    - "ssh *"
+  default: hold
+
+# Egress rules
+egress:
+  default: deny
+  allow_hosts: ["api.github.com", "pypi.org", "registry.npmjs.org"]
+  hold_methods: [POST, PUT, PATCH, DELETE]
+
+# Kill-switch: Auto-lock runaway loops
+kill_switch:
+  max_blocked_attempts: 5
+  window_seconds: 60
+  behaviour_threshold: 0.90
+```
+
+---
+
+## 🔬 Measured Evaluation & Benchmarks
+
+RepoShield includes an empirical evaluation harness with 224 curated test cases tested over 568 requests:
+
+| Metric | Keyword-Only Baseline | RepoShield AI | Target | Status |
+|---|:---:|:---:|:---:|:---:|
+| **Detection Rate (Recall)** | 48.3% | **77.5%** | ≥ 90% | Realistic offline model |
+| **False Positive Rate** | 24.6% | **16.4%** | ≤ 10% | Filtered benign test contexts |
+| **Context Discrimination** | 0/10 pairs | **9/10 pairs** | 10/10 | Discriminates test cards vs real DB |
+| **Prompt Injection Defense** | 0% (failed all) | **100% (5/5 stopped)** | 100% | Blocked hidden prompt vectors |
+| **Restore-on-Write Accuracy** | N/A | **20/20 (100%)** | 100% | Byte-identical file restoration |
+| **Median Decision Latency** | 0.8 ms | **25.5 ms** | < 50 ms | Meets target SLA |
+| **p95 Latency** | 1.4 ms | **54.3 ms** | < 120 ms | Meets target SLA |
+
+*All results are un-tuned and generated by running `make eval`. See [`eval/results/results.md`](eval/results/results.md) for full confusion matrices and breakdown.*
+
+---
+
+## 📂 Repository Architecture
+
+```text
+TAI/
+├── backend/
+│   ├── main.py                  # Dual-listener entrypoint (MCP + API)
+│   ├── config.py                # Environment configuration & settings
+│   ├── mcp_app.py               # FastMCP tool declarations
+│   ├── api_app.py               # Human dashboard REST & WebSocket API
+│   ├── core/                    # Pipeline, approvals, audit, decision, snapshots
+│   ├── policy/                  # Policy loader, profiles, and path matchers
+│   ├── engines/                 # Scorer, detectors, AST/table maskers, restore
+│   ├── connectors/              # Filesystem, command, SQLite, network
+│   └── tests/                   # 239 unit and integration tests
+├── frontend/                    # Vite + React 19 + Tailwind 4 + Cytoscape
+├── demo/                        # 8-step scripted attack demo & simulated agent
+├── eval/                        # Evaluation dataset, content model training, benchmarks
+├── sandbox/                     # Gateway and Agent Dockerfiles
+├── scripts/                     # Seed scripts, tamper demo, isolation verification
+├── docs/                        # Complete technical specifications (01 - 09)
+├── docker-compose.yml           # Zero-trust container topology
+├── Makefile                     # Standard developer commands
+└── .aishield                    # Canonical runtime policy
+```
+
+---
+
+## 📖 In-Depth Documentation
+
+For architectural deep-dives, consult the [`docs/`](docs/) directory:
+- [01. Product Specification](docs/01-PRODUCT.md) — Problem statement, user personas, requirement IDs.
+- [02. Architecture & Threat Model](docs/02-ARCHITECTURE.md) — Security boundaries, process model, Docker topology.
+- [03. Policy, Scoring & Reasons](docs/03-POLICY-AND-SCORING.md) — 4-signal formula, detectors, reason templates.
+- [04. Connectors & API Specification](docs/04-CONNECTORS-AND-API.md) — MCP tools and dashboard endpoints.
+- [05. Data & Audit Ledger](docs/05-DATA-AND-AUDIT.md) — SQLite schema, SHA-256 canonical hash chaining.
+- [06. Masking & Restore-on-Write](docs/06-MASKING.md) — Python AST parsing, typed placeholders, delta tracking.
+- [07. Interactive Dashboard](docs/07-DASHBOARD.md) — Frontend component architecture and WebSocket lifecycle.
+- [08. Demo & Evaluation](docs/08-DEMO-AND-EVAL.md) — Attack scripts, evaluation methodology, baseline comparisons.
+- [09. Build Plan](docs/09-BUILD-PLAN.md) — Acceptance criteria for all implementation phases.
+- [Decisions Log](docs/DECISIONS.md) — Engineering decision records and rationales.
+- [Progress Log](docs/PROGRESS.md) — Verified evidence for every build milestone.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
