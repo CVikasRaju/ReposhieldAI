@@ -55,6 +55,20 @@ export function InterventionLog() {
     setBusy(null);
   };
 
+  function approvalLabel(approval: string | null | undefined): string {
+    if (!approval) return "—";
+    if (approval === "approved_masked") return "approved + masked";
+    if (approval === "approved") return "approved";
+    if (approval === "denied") return "denied";
+    return approval;
+  }
+
+  function approvalColor(approval: string | null | undefined): string {
+    if (approval === "approved_masked" || approval === "approved") return "text-green-700 font-semibold";
+    if (approval === "denied") return "text-red-600 font-semibold";
+    return "text-slate-500";
+  }
+
   return (
     <section className="flex min-h-0 flex-col rounded-2xl border border-slate-300 bg-white shadow-sm">
       <header className="flex flex-wrap items-center gap-2 border-b border-slate-200 px-4 py-2.5 bg-slate-50/70 rounded-t-2xl">
@@ -68,7 +82,7 @@ export function InterventionLog() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => toggleDecision(decision)}
-                className={`rounded-full border px-2 py-0.5 text-[11px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
+                className={`rounded-full border px-2 py-0.5 text-[11px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                   active
                     ? DECISION_CLASS[decision]
                     : "border-slate-300 bg-white text-slate-600 hover:text-slate-900 shadow-xs"
@@ -87,13 +101,13 @@ export function InterventionLog() {
           value={filters.text}
           onChange={(event) => setFilters({ text: event.target.value })}
           placeholder="Filter target…"
-          className="w-40 rounded-lg border border-zinc-700 bg-zinc-950 px-2 py-1 text-xs text-slate-800 font-semibold placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+          className="w-40 rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs text-slate-800 placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
         />
         {filters.nodeId ? (
           <button
             type="button"
             onClick={clearNodeFilter}
-            className="rounded-full border border-sky-500/40 bg-sky-500/10 px-2 py-0.5 text-[11px] text-sky-200 hover:bg-sky-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            className="rounded-full border border-[#2a0845]/40 bg-[#2a0845]/10 px-2 py-0.5 text-[11px] text-[#2a0845] hover:bg-[#2a0845]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
           >
             node: {filters.nodeId} ✕
           </button>
@@ -116,7 +130,7 @@ export function InterventionLog() {
           </p>
         ) : (
           <table className="w-full border-collapse text-left text-xs">
-            <thead className="sticky top-0 bg-zinc-900 text-[10px] uppercase tracking-wide text-slate-500">
+            <thead className="sticky top-0 bg-[#2a0845] text-[10px] uppercase tracking-wide text-slate-200">
               <tr>
                 <th className="px-2 py-1.5 font-medium">Time</th>
                 <th className="px-2 py-1.5 font-medium">Connector</th>
@@ -143,24 +157,24 @@ export function InterventionLog() {
                       selectEvent(event.id);
                     }
                   }}
-                  className={`cursor-pointer border-t border-zinc-800/70 align-top transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
-                    selectedEventId === event.id ? "bg-emerald-500/5" : "hover:bg-zinc-800/50"
+                  className={`cursor-pointer border-t border-slate-200 align-top transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+                    selectedEventId === event.id ? "bg-amber-50" : "hover:bg-slate-50"
                   }`}
                 >
                   <td className="whitespace-nowrap px-2 py-1.5 tabular-nums text-slate-500">
                     {formatClock(event.ts)}
                   </td>
-                  <td className="whitespace-nowrap px-2 py-1.5 text-zinc-300">
+                  <td className="whitespace-nowrap px-2 py-1.5 text-[#2a0845] font-medium">
                     <span aria-hidden>{CONNECTOR_ICON[event.connector]}</span> {event.connector}
                   </td>
-                  <td className="max-w-[12rem] px-2 py-1.5 font-mono text-[11px] text-zinc-300">
+                  <td className="max-w-[12rem] px-2 py-1.5 font-mono text-[11px] text-slate-700">
                     <span title={event.target}>{truncateMiddle(event.target, 44)}</span>
                   </td>
                   {view === "detail" ? (
-                    <td className="px-2 py-1.5 tabular-nums text-slate-500">{event.risk_tier}</td>
+                    <td className="px-2 py-1.5 tabular-nums text-slate-600">{event.risk_tier}</td>
                   ) : null}
                   {view === "detail" ? (
-                    <td className="px-2 py-1.5 tabular-nums text-slate-500">
+                    <td className="px-2 py-1.5 tabular-nums text-slate-600">
                       {eventScore(event)}
                     </td>
                   ) : null}
@@ -172,17 +186,15 @@ export function InterventionLog() {
                       {decisionLabel(event.decision)}
                     </span>
                   </td>
-                  <td className="whitespace-nowrap px-2 py-1.5 text-[11px] text-slate-500">
-                    {event.approval === "approved_masked"
-                      ? "approved with masking"
-                      : event.approval}
+                  <td className={`whitespace-nowrap px-2 py-1.5 text-[11px] ${approvalColor(event.approval)}`}>
+                    {approvalLabel(event.approval)}
                   </td>
-                  <td className="max-w-[20rem] px-2 py-1.5 text-zinc-300">
+                  <td className="max-w-[20rem] px-2 py-1.5 text-slate-700">
                     <span className="block truncate" title={event.reason_text}>
                       {event.reason_text}
                     </span>
                     {view === "detail" && event.hash ? (
-                      <span className="block font-mono text-[10px] text-slate-500">
+                      <span className="block font-mono text-[10px] text-slate-400">
                         {event.hash.slice(0, 8)}
                       </span>
                     ) : null}
@@ -196,12 +208,12 @@ export function InterventionLog() {
                           click.stopPropagation();
                           void undo(event.id);
                         }}
-                        className="rounded border border-amber-500/50 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-200 hover:bg-amber-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50"
+                        className="rounded border border-amber-600 bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800 hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:opacity-50 shadow-sm"
                       >
-                        {busy === event.id ? "Undoing…" : "Undo"}
+                        {busy === event.id ? "Undoing..." : "Undo"}
                       </button>
                     ) : (
-                      <span className="text-[10px] text-zinc-600">—</span>
+                      <span className="text-[10px] text-slate-400">-</span>
                     )}
                   </td>
                 </tr>

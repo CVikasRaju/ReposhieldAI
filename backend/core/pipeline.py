@@ -281,8 +281,10 @@ class Pipeline:
                 return code
         return ReasonCode.INTERNAL_ERROR.value if decision == Decision.BLOCK else ReasonCode.MASKED_FOR_PRIVACY.value
 
-    async def _publish_event(self, event: EventRecord) -> None:
-        await self.bus.publish("event.created", {"event": event.model_dump(mode="json")})
+    async def _publish_event(self, event: EventRecord, *, undoable: bool = False) -> None:
+        payload = event.model_dump(mode="json")
+        payload["undoable"] = undoable
+        await self.bus.publish("event.created", {"event": payload})
 
     async def _reject_locked(self, request: ActionRequest, started: float) -> ToolResult:
         event = EventRecord(
@@ -731,7 +733,7 @@ class Pipeline:
             return ToolResult(status="blocked", event_id=event_id, notice=BLOCKED_MESSAGE)
         if approval_id:
             await asyncio.to_thread(self.audit.attach_approval_event, approval_id, logged.id)
-        await self._publish_event(logged)
+        await self._publish_event(logged, undoable=(snapshot is not None))
 
         sensitive_read = bool(
             prepared.read_operation and (location >= 0.5 or pattern >= 0.5 or has_floor)
