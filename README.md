@@ -116,7 +116,7 @@ make train-model
 Run the full automated test suite, code linter, attack demo, and tamper proof:
 
 ```bash
-make test         # Runs 239 pytest unit and integration tests
+make test         # Runs 241 pytest unit and integration tests
 make lint         # Verifies Ruff code formatting & linting rules
 make demo         # Executes 8-step scripted attack verification suite
 make tamper-demo  # Demonstrates cryptographic audit ledger tampering detection
@@ -220,7 +220,22 @@ Navigate to **Settings** ➔ **Features** ➔ **MCP**:
 - **Type:** `SSE` / `HTTP`
 - **URL:** `http://127.0.0.1:8001/mcp`
 
-### 3. Cline / Roo Code / Windsurf
+### 3. Google Antigravity
+In Antigravity IDE: **… (agent panel) ➔ MCP Servers ➔ Manage MCP Servers ➔ View raw config**, then add RepoShield to `mcp_config.json` (global at `~/.gemini/config/mcp_config.json`, or per workspace at `.agents/mcp_config.json`):
+```json
+{
+  "mcpServers": {
+    "reposhield": {
+      "serverUrl": "http://127.0.0.1:8001/mcp",
+      "headers": { "X-RepoShield-Session": "antigravity" },
+      "timeoutSeconds": 600
+    }
+  }
+}
+```
+Antigravity requires the Streamable HTTP transport (`serverUrl`). The session header is optional; it puts the agent's activity in its own session in the dashboard. Ask the agent to use the RepoShield tools (`list_directory`, `read_file`, `run_command`, `db_query`, `http_request`, …) instead of its built-in file and shell tools, and allow those MCP tools when Antigravity prompts.
+
+### 4. Cline / Roo Code / Windsurf
 Add to your extension's MCP server configuration:
 ```json
 {
@@ -233,7 +248,7 @@ Add to your extension's MCP server configuration:
 }
 ```
 
-### 4. Custom Python Agents (LangChain, LlamaIndex, AutoGen, CrewAI)
+### 5. Custom Python Agents (LangChain, LlamaIndex, AutoGen, CrewAI)
 Connect via the official MCP Python SDK:
 ```python
 from mcp.client.streamable_http import streamable_http_client

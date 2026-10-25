@@ -36,9 +36,6 @@ run:
 demo:
 	$(PY) demo/run_demo.py --auto-approve --assert
 
-full-demo:
-	$(PY) demo/full_demo.py
-
 eval:
 	$(PY) eval/run_eval.py
 

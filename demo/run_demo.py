@@ -220,6 +220,7 @@ async def setup_gateway() -> GatewayHandle:
 
     if status == 200 and env_token:
         print(f"[gateway] reusing the running gateway at {api_base}")
+        print(f"[dashboard] open http://localhost:5173/#token={env_token}")
         return GatewayHandle(
             api_base=api_base,
             mcp_url=f"http://{probe.mcp_host}:{probe.mcp_port}/mcp",
@@ -266,6 +267,7 @@ async def setup_gateway() -> GatewayHandle:
     handle.mcp_url = f"{mcp_base}/mcp"
     handle.servers = [(api_task, api_server), (mcp_task, mcp_server)]
     print(f"[gateway] started a fresh gateway: API {api_base}, MCP {handle.mcp_url}")
+    print(f"[dashboard] open http://localhost:5173/#token={token}")
     return handle
 
 

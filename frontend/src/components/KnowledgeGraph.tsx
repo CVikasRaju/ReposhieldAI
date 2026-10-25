@@ -42,13 +42,13 @@ function buildElements(
   const visibleNodes = graph.nodes.filter((node) => isVisible(node.id));
   const visibleIds = new Set(visibleNodes.map((node) => node.id));
 
+  // Hierarchy is drawn with edges only: compound parents distort every layout here.
   const elements: ElementDefinition[] = visibleNodes.map((node) => ({
     group: "nodes",
     data: {
       id: node.id,
       label: nodeLabel(node),
       type: node.type,
-      parent: node.parent && visibleIds.has(node.parent) ? node.parent : undefined,
       state: node.state,
     },
     classes: `state-${node.state}`,
@@ -72,9 +72,67 @@ export function KnowledgeGraph() {
   const collapsedRef = useRef<Set<string>>(new Set());
   const extraExpandedRef = useRef<Set<string>>(new Set());
   const signatureRef = useRef<string>("");
+  const stateSignatureRef = useRef<string>("");
+  const graphRef = useRef<GraphPayload | null>(null);
   const [version, setVersion] = useState(0);
 
+  graphRef.current = graph;
+
   const rerender = useCallback(() => setVersion((value) => value + 1), []);
+
+  const fitGraph = useCallback((cy: Core, attempts = 8) => {
+    // The panel is laid out after hydration, so retry until it has a real height.
+    const run = (left: number) => {
+      requestAnimationFrame(() => {
+        if (cy.destroyed() || !containerRef.current) return;
+        if (containerRef.current.clientHeight === 0 && left > 0) {
+          run(left - 1);
+          return;
+        }
+        cy.resize();
+        if (cy.elements().length > 0) cy.fit(cy.elements(), 24);
+      });
+    };
+    run(attempts);
+  }, []);
+
+  const syncGraph = useCallback(
+    (cy: Core, payload: GraphPayload) => {
+      const elements = buildElements(payload, collapsedRef.current, extraExpandedRef.current);
+      const structureSignature = elements
+        .map((element) => `${element.group}:${element.data.id}`)
+        .join("|");
+      const stateSignature = elements.map((element) => element.classes).join("|");
+      const structureChanged = structureSignature !== signatureRef.current;
+      const stateChanged = stateSignature !== stateSignatureRef.current;
+      signatureRef.current = structureSignature;
+      stateSignatureRef.current = stateSignature;
+      if (structureChanged) {
+        // Re-adding nodes resets their positions, so only rebuild when the shape changed.
+        cy.batch(() => {
+          cy.elements().remove();
+          cy.add(elements);
+        });
+        cy.layout({
+          name: "cose",
+          animate: false,
+          padding: 24,
+          nodeRepulsion: () => 6400,
+          idealEdgeLength: () => 80,
+        }).run();
+        fitGraph(cy);
+      } else if (stateChanged) {
+        for (const element of elements) {
+          const node = cy.getElementById(String(element.data.id));
+          if (node.nonempty()) {
+            node.classes(String(element.classes));
+            node.data("state", element.data.state);
+          }
+        }
+      }
+    },
+    [fitGraph],
+  );
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -180,34 +238,23 @@ export function KnowledgeGraph() {
     const resizer = new ResizeObserver(() => cy.resize());
     resizer.observe(containerRef.current);
 
+    // A fresh instance must lay out from scratch even if the payload is unchanged.
+    signatureRef.current = "";
+    stateSignatureRef.current = "";
+    if (graphRef.current) syncGraph(cy, graphRef.current);
+
     return () => {
       resizer.disconnect();
       cy.destroy();
       cyRef.current = null;
     };
-  }, [rerender]);
+  }, [rerender, syncGraph]);
 
   useEffect(() => {
     const cy = cyRef.current;
     if (!cy || !graph) return;
-    const elements = buildElements(graph, collapsedRef.current, extraExpandedRef.current);
-    const signature = graph.nodes.map((node) => `${node.id}:${node.state}`).join("|");
-    cy.batch(() => {
-      cy.elements().remove();
-      cy.add(elements);
-    });
-    if (signature !== signatureRef.current) {
-      signatureRef.current = signature;
-      cy.layout({
-        name: "cose",
-        animate: false,
-        padding: 24,
-        nodeRepulsion: () => 6400,
-        idealEdgeLength: () => 60,
-      }).run();
-    }
-    cy.resize();
-  }, [graph, version]);
+    syncGraph(cy, graph);
+  }, [graph, version, syncGraph]);
 
   useEffect(() => {
     let heldPhase = false;
@@ -239,7 +286,8 @@ export function KnowledgeGraph() {
         <span className="text-[11px] text-zinc-500">What the AI thinks it knows</span>
       </header>
       <div className="relative min-h-[260px] flex-1">
-        <div ref={containerRef} className="absolute inset-0" aria-label="Workspace knowledge graph" />
+        {/* Cytoscape forces its container to position: relative, so size it directly. */}
+        <div ref={containerRef} className="h-full w-full" aria-label="Workspace knowledge graph" />
         {graph && graph.nodes.length === 0 ? (
           <p className="absolute inset-0 flex items-center justify-center text-sm text-zinc-500">
             Waiting for the agent to touch the workspace.
