@@ -117,10 +117,10 @@ export function DeltaView() {
   const truncated = (raw?.length ?? 0) > CAP || (sanitized?.length ?? 0) > CAP;
 
   return (
-    <section className="flex min-h-0 flex-col rounded-xl border border-zinc-800 bg-zinc-900/60">
-      <header className="flex items-center justify-between border-b border-zinc-800 px-3 py-2">
+    <section className="flex min-h-0 flex-col rounded-2xl border border-slate-300 bg-white shadow-sm">
+      <header className="flex items-center justify-between border-b border-slate-200 px-4 py-2.5 bg-slate-50/70 rounded-t-2xl">
         <h2 className="text-sm font-semibold text-zinc-200">Delta</h2>
-        <span className="text-[11px] text-zinc-500">
+        <span className="text-[11px] font-medium text-slate-500">
           {selectedEventId ? selectedEventId : "select an event"}
         </span>
       </header>
@@ -139,7 +139,7 @@ export function DeltaView() {
         ) : (
           <div className="space-y-3">
             <div>
-              <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">
+              <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-600">
                 What the agent asked for
               </h3>
               <div className="relative">
@@ -163,7 +163,7 @@ export function DeltaView() {
             </div>
 
             <div>
-              <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-zinc-400">
+              <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-600">
                 What the agent received
               </h3>
               <pre className="max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-lg border border-zinc-800 bg-zinc-950 p-2 font-mono text-[11px] leading-relaxed text-zinc-300">
@@ -179,7 +179,7 @@ export function DeltaView() {
 
             <ul className="flex flex-wrap gap-x-4 gap-y-1 border-t border-zinc-800 pt-2">
               {[...counts.entries()].map(([category, count]) => (
-                <li key={category} className="flex items-center gap-1.5 text-[11px] text-zinc-400">
+                <li key={category} className="flex items-center gap-1.5 text-[11px] text-slate-600">
                   <span aria-hidden className={`h-2 w-2 rounded ${CATEGORY_META[category].dot}`} />
                   <span>
                     {CATEGORY_META[category].label} ({count})
@@ -187,7 +187,7 @@ export function DeltaView() {
                 </li>
               ))}
               {counts.size === 0 ? (
-                <li className="text-[11px] text-zinc-500">No changes in this event.</li>
+                <li className="text-[11px] font-medium text-slate-500">No changes in this event.</li>
               ) : null}
             </ul>
           </div>

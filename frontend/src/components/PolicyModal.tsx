@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { api } from "../api";
 import { useStore } from "../store";
 import type { PolicySample } from "../types";
@@ -17,6 +18,23 @@ export function PolicyModal({ isOpen, onClose }: PolicyModalProps) {
   const [copied, setCopied] = useState(false);
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+
+  // Lock body scroll and listen for Escape key when open
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -87,20 +105,30 @@ export function PolicyModal({ isOpen, onClose }: PolicyModalProps) {
   const exists = sample?.exists ?? policy?.file_exists ?? false;
   const path = sample?.policy_path ?? policy?.policy_path ?? ".aishield";
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
-      <div className="relative flex max-h-[90vh] w-full max-w-3xl flex-col rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-zinc-800 px-6 py-4">
+  const modalContent = (
+    <div
+      className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm pointer-events-auto"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="policy-modal-title"
+    >
+      <div
+        className="relative flex max-h-[90vh] w-full max-w-3xl flex-col rounded-2xl border-2 border-slate-300 bg-white text-slate-900 shadow-2xl opacity-100"
+        style={{ backgroundColor: "#ffffff" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Deep Aubergine Header */}
+        <div className="flex items-center justify-between rounded-t-2xl bg-[#2a0845] px-6 py-4.5 text-white">
           <div className="flex items-center gap-3">
-            <span className="text-2xl" aria-hidden>
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-400/20 text-xl" aria-hidden>
               🛡️
             </span>
             <div>
-              <h2 className="text-lg font-bold text-zinc-100">
+              <h2 id="policy-modal-title" className="text-lg font-bold text-white tracking-wide">
                 Security Policy Configuration (.aishield)
               </h2>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-amber-200/80 font-medium">
                 Declarative zero-trust runtime policy and privacy boundaries
               </p>
             </div>
@@ -108,7 +136,7 @@ export function PolicyModal({ isOpen, onClose }: PolicyModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white hover:bg-white/20 hover:text-amber-300 transition"
             aria-label="Close modal"
           >
             ✕
@@ -116,59 +144,58 @@ export function PolicyModal({ isOpen, onClose }: PolicyModalProps) {
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4 bg-white">
           {/* Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-zinc-800 bg-zinc-950 p-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3.5 shadow-sm">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-zinc-300">File Status:</span>
+                <span className="text-xs font-semibold text-slate-700">File Status:</span>
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                     exists
-                      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                      : "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                      ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                      : "bg-amber-100 text-amber-800 border border-amber-300"
                   }`}
                 >
                   <span
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      exists ? "bg-emerald-400" : "bg-amber-400"
+                    className={`h-2 w-2 rounded-full ${
+                      exists ? "bg-emerald-500" : "bg-amber-500 animate-pulse"
                     }`}
                   />
                   {exists ? "Active on Disk" : "Not Found (Using Profile Defaults)"}
                 </span>
               </div>
-              <p className="font-mono text-xs text-zinc-500 truncate max-w-lg" title={path}>
+              <p className="font-mono text-xs text-slate-500 truncate max-w-lg" title={path}>
                 Path: {path}
               </p>
             </div>
 
             {policy ? (
               <div className="flex items-center gap-2">
-                <span className="rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-xs text-zinc-300">
-                  Profile: <strong className="text-emerald-400">{policy.profile}</strong>
+                <span className="rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs text-slate-700 shadow-xs">
+                  Profile: <strong className="text-[#2a0845] font-bold">{policy.profile}</strong>
                 </span>
-                <span className="rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-xs text-zinc-300">
-                  Mode: <strong className="text-zinc-200">{policy.mode}</strong>
+                <span className="rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs text-slate-700 shadow-xs">
+                  Mode: <strong className="text-amber-700 font-bold">{policy.mode}</strong>
                 </span>
               </div>
             ) : null}
           </div>
 
           {/* Quick Explanation */}
-          <div className="rounded-lg border border-zinc-800 bg-zinc-950/60 p-3 text-xs text-zinc-300 space-y-1.5">
-            <p>
+          <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-3.5 text-xs text-amber-950 space-y-1">
+            <p className="font-semibold text-amber-900">
               RepoShield enforces policy outside the AI agent&apos;s runtime using this{" "}
-              <code className="text-emerald-400">.aishield</code> file.
+              <code className="rounded bg-amber-200/60 px-1 py-0.5 font-mono text-amber-950 font-bold">.aishield</code> file.
             </p>
-            <p className="text-zinc-400">
-              Customize protected files, allowed commands, database tables, and egress domains for
-              your specific project.
+            <p className="text-slate-600">
+              Customize protected files, allowed commands, database tables, and egress domains for your specific project.
             </p>
           </div>
 
           {/* Status Message / Notification */}
           {saveStatus ? (
-            <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs font-medium text-emerald-300">
+            <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-3.5 text-xs font-semibold text-emerald-900 shadow-xs">
               ✓ {saveStatus}
             </div>
           ) : null}
@@ -176,15 +203,15 @@ export function PolicyModal({ isOpen, onClose }: PolicyModalProps) {
           {/* Code Viewer */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-zinc-400">Sample Template YAML</span>
-              <span className="text-[11px] text-zinc-500">Read-only preview</span>
+              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Sample Template YAML</span>
+              <span className="text-[11px] text-slate-500 font-medium">Read-only preview</span>
             </div>
             {loading ? (
-              <div className="flex h-64 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950 text-xs text-zinc-400">
+              <div className="flex h-64 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-500">
                 Loading template…
               </div>
             ) : (
-              <pre className="max-h-72 overflow-y-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs leading-relaxed text-zinc-200 selection:bg-emerald-500/30">
+              <pre className="max-h-72 overflow-y-auto rounded-xl border border-slate-800 bg-slate-900 p-4 font-mono text-xs leading-relaxed text-amber-300 selection:bg-amber-500/30 shadow-inner">
                 <code>{sample?.yaml || "# No template available."}</code>
               </pre>
             )}
@@ -192,19 +219,19 @@ export function PolicyModal({ isOpen, onClose }: PolicyModalProps) {
         </div>
 
         {/* Footer Actions */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-800 px-6 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-b-2xl border-t border-slate-200 bg-slate-50 px-6 py-4">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={onCopy}
-              className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-200 hover:bg-zinc-700 hover:text-white transition"
+              className="rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-950 transition shadow-xs"
             >
               {copied ? "✓ Copied!" : "📋 Copy YAML"}
             </button>
             <button
               type="button"
               onClick={onDownload}
-              className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-200 hover:bg-zinc-700 hover:text-white transition"
+              className="rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-950 transition shadow-xs"
             >
               ⬇️ Download .aishield
             </button>
@@ -215,14 +242,14 @@ export function PolicyModal({ isOpen, onClose }: PolicyModalProps) {
               type="button"
               onClick={onSaveToWorkspace}
               disabled={saving}
-              className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-emerald-500 transition disabled:opacity-50"
+              className="rounded-lg bg-[#f59e0b] px-4 py-1.5 text-xs font-bold text-slate-950 hover:bg-[#d97706] transition shadow-xs disabled:opacity-50"
             >
               {saving ? "Creating…" : "⚡ Create / Save in Project"}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700"
+              className="rounded-lg bg-[#2a0845] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#3b0764] transition shadow-xs"
             >
               Done
             </button>
@@ -231,4 +258,6 @@ export function PolicyModal({ isOpen, onClose }: PolicyModalProps) {
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }

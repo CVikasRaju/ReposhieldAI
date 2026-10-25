@@ -5,9 +5,9 @@ import type { ChainVerification } from "../types";
 import { PolicyModal } from "./PolicyModal";
 
 const STATUS_STYLE: Record<string, string> = {
-  active: "bg-emerald-500/15 text-emerald-300 border-emerald-500/40",
-  locked: "bg-red-500/15 text-red-300 border-red-500/40",
-  ended: "bg-zinc-600/20 text-zinc-300 border-zinc-500/40",
+  active: "bg-emerald-500/20 text-emerald-200 border-emerald-400/50",
+  locked: "bg-rose-500/25 text-rose-200 border-rose-400/50",
+  ended: "bg-slate-600/30 text-slate-300 border-slate-500/40",
 };
 
 export function Header() {
@@ -55,13 +55,13 @@ export function Header() {
   const locked = status === "locked";
 
   return (
-    <header className="border-b border-zinc-800 bg-zinc-950/90 px-4 py-3 backdrop-blur">
+    <header className="border-b border-[#3b0d5c] bg-[#2a0845] px-5 py-3.5 text-white shadow-md">
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2">
-          <span aria-hidden className="text-xl">
-            🛡
+        <div className="flex items-center gap-2.5">
+          <span aria-hidden className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-400/20 text-lg">
+            🛡️
           </span>
-          <span className="text-lg font-semibold tracking-tight">RepoShield</span>
+          <span className="text-lg font-bold tracking-tight text-white">RepoShield AI</span>
         </div>
 
         <label className="sr-only" htmlFor="session-select">
@@ -71,11 +71,11 @@ export function Header() {
           id="session-select"
           value={sessionId ?? ""}
           onChange={(event) => void selectSession(event.target.value)}
-          className="rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+          className="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
         >
-          {sessions.length === 0 ? <option value="">no sessions</option> : null}
+          {sessions.length === 0 ? <option value="" className="text-slate-900">no sessions</option> : null}
           {sessions.map((item) => (
-            <option key={item.id} value={item.id}>
+            <option key={item.id} value={item.id} className="text-slate-900">
               {item.id} · {item.profile}
             </option>
           ))}
@@ -86,16 +86,16 @@ export function Header() {
             type="button"
             onClick={() => setPolicyModalOpen(true)}
             title="Click to view policy or generate .aishield template"
-            className="group flex items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs text-zinc-300 hover:border-emerald-500/50 hover:bg-zinc-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            className="group flex items-center gap-1.5 rounded-full border border-amber-400/60 bg-amber-400/20 px-3.5 py-1 text-xs text-amber-200 hover:bg-amber-400/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 shadow-xs"
           >
-            <span>🛡️ Policy:</span>
-            <strong className="text-emerald-400 group-hover:underline">
+            <span className="text-amber-300">🛡️ Policy:</span>
+            <strong className="text-white group-hover:underline font-bold">
               {policy.profile}
             </strong>
-            <span className="text-zinc-500">·</span>
-            <span>{policy.mode}</span>
+            <span className="text-amber-300/60">·</span>
+            <span className="text-amber-200">{policy.mode}</span>
             {policy.file_exists === false ? (
-              <span className="ml-1 rounded bg-amber-500/20 px-1 text-[10px] text-amber-300">
+              <span className="ml-1 rounded bg-amber-500/30 px-1.5 py-0.2 text-[10px] text-amber-100 font-bold">
                 no file
               </span>
             ) : null}
@@ -114,7 +114,7 @@ export function Header() {
           <div
             role="group"
             aria-label="Detail level"
-            className="flex overflow-hidden rounded-lg border border-zinc-700"
+            className="flex overflow-hidden rounded-lg border border-white/20 bg-white/10"
           >
             {(["simple", "detail"] as const).map((mode) => (
               <button
@@ -122,10 +122,10 @@ export function Header() {
                 type="button"
                 aria-pressed={view === mode}
                 onClick={() => setView(mode)}
-                className={`px-3 py-1.5 text-xs font-medium capitalize transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
+                className={`px-3 py-1.5 text-xs font-semibold capitalize transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                   view === mode
-                    ? "bg-zinc-700 text-white"
-                    : "bg-zinc-900 text-zinc-400 hover:text-zinc-200"
+                    ? "bg-[#f59e0b] text-slate-950 font-bold"
+                    : "text-white/80 hover:text-white"
                 }`}
               >
                 {mode}
@@ -137,7 +137,7 @@ export function Header() {
             type="button"
             onClick={() => void onVerify()}
             disabled={busy}
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-200 hover:border-emerald-500/60 hover:text-emerald-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50"
+            className="rounded-lg border border-amber-400/60 bg-amber-400/20 px-3 py-1.5 text-xs font-semibold text-amber-200 hover:bg-amber-400/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:opacity-50 shadow-xs"
           >
             {busy ? "Verifying…" : "Verify Log"}
           </button>
@@ -146,10 +146,10 @@ export function Header() {
             type="button"
             onClick={() => void (locked ? unlockSession() : lockSession())}
             disabled={status === "ended"}
-            className={`rounded-lg border px-3 py-1.5 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-40 ${
+            className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:opacity-40 shadow-xs ${
               locked
-                ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
-                : "border-red-500/50 bg-red-500/10 text-red-300 hover:bg-red-500/20"
+                ? "border-emerald-400/60 bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/30"
+                : "border-rose-400/60 bg-rose-500/20 text-rose-200 hover:bg-rose-500/30"
             }`}
           >
             {locked ? "Unlock" : "Lock"}
@@ -160,14 +160,14 @@ export function Header() {
       {banner ? (
         <p
           role="status"
-          className={`mt-3 rounded-lg border px-3 py-2 text-sm ${
+          className={`mt-3 rounded-xl border px-3.5 py-2 text-sm font-medium ${
             banner.ok
-              ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-200"
-              : "border-red-500/40 bg-red-500/10 text-red-200"
+              ? "border-emerald-400/60 bg-emerald-500/20 text-emerald-100"
+              : "border-rose-400/60 bg-rose-500/25 text-rose-100"
           }`}
         >
           {banner.ok
-            ? `Log intact, ${banner.checked} entries checked`
+            ? `✓ Log intact, ${banner.checked} entries checked`
             : `Tampering detected at entry #${banner.first_bad_seq ?? "?"}`}
         </p>
       ) : null}

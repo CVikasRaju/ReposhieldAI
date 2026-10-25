@@ -11,30 +11,30 @@ export function MetricsStrip() {
   const metrics = useStore((state) => state.metrics);
 
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3">
+    <div className="rounded-2xl border border-slate-300 bg-white p-3.5 shadow-sm">
       <div className="grid grid-cols-4 gap-2">
         {CELLS.map((cell) => (
-          <div key={cell.key} className="rounded-lg bg-zinc-950/60 px-2 py-1.5">
+          <div key={cell.key} className="rounded-xl border border-slate-200 bg-slate-50/80 px-2.5 py-2">
             <div className="flex items-center gap-1.5">
               <span aria-hidden className={`h-2 w-2 rounded-full ${cell.dot}`} />
-              <span className="truncate text-[10px] uppercase tracking-wide text-zinc-400">
+              <span className="truncate text-[10px] uppercase tracking-wide text-slate-600 font-bold">
                 {cell.label}
               </span>
             </div>
-            <p className="mt-0.5 text-lg font-semibold tabular-nums text-zinc-100">
+            <p className="mt-0.5 text-lg font-bold tabular-nums text-[#2a0845]">
               {metrics?.counts?.[cell.key] ?? 0}
             </p>
           </div>
         ))}
       </div>
-      <p className="mt-2 text-[11px] text-zinc-400">
+      <p className="mt-2 text-[11px] text-slate-500 font-medium">
         Mean pipeline latency{" "}
-        <span className="tabular-nums text-zinc-200">
+        <span className="tabular-nums text-slate-800 font-bold">
           {(metrics?.latency_mean_ms ?? 0).toFixed(1)} ms
         </span>
-        <span className="text-zinc-600"> · </span>
+        <span className="text-slate-400"> · </span>
         p95{" "}
-        <span className="tabular-nums text-zinc-200">
+        <span className="tabular-nums text-slate-800 font-bold">
           {(metrics?.latency_p95_ms ?? 0).toFixed(1)} ms
         </span>
       </p>

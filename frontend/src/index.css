@@ -24,17 +24,17 @@ body,
 
 body {
   margin: 0;
-  background-color: #09090b;
-  color: #f4f4f5;
+  background-color: #eef2f6;
+  color: #1e1035;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 *:focus-visible {
-  outline: 2px solid #34d399;
+  outline: 2px solid #f59e0b;
   outline-offset: 2px;
 }
 
 ::selection {
-  background-color: rgb(16 185 129 / 0.35);
+  background-color: rgb(245 158 11 / 0.3);
 }

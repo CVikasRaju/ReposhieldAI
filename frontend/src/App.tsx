@@ -53,13 +53,13 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="min-h-screen bg-[#eef2f6] text-[#1e1035]">
       <Header />
 
       {connection === "reconnecting" ? (
         <div
           role="status"
-          className="border-b border-amber-500/40 bg-amber-500/10 px-4 py-1.5 text-xs text-amber-200"
+          className="border-b border-amber-300 bg-amber-50 px-4 py-1.5 text-xs font-semibold text-amber-900"
         >
           Reconnecting to the gateway…
         </div>
@@ -68,7 +68,7 @@ export default function App() {
       {error ? (
         <div
           role="alert"
-          className="flex items-center gap-3 border-b border-red-500/40 bg-red-500/10 px-4 py-1.5 text-xs text-red-200"
+          className="flex items-center gap-3 border-b border-rose-300 bg-rose-50 px-4 py-1.5 text-xs text-rose-900"
         >
           <span>{error}</span>
           <button
@@ -77,7 +77,7 @@ export default function App() {
               setError(null);
               void refreshAll();
             }}
-            className="rounded border border-red-400/50 px-2 py-0.5 font-semibold hover:bg-red-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300"
+            className="rounded border border-rose-400 px-2 py-0.5 font-bold hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
           >
             Retry
           </button>
@@ -88,7 +88,7 @@ export default function App() {
         <div className="order-2 flex min-h-[320px] flex-col lg:order-1">
           <div className="flex h-full min-h-[320px] flex-col">
             {loading && !sessionId ? (
-              <div className="flex flex-1 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900/60 text-sm text-zinc-500">
+              <div className="flex flex-1 items-center justify-center rounded-2xl border border-slate-300 bg-white text-sm text-slate-500 shadow-sm">
                 Loading workspace…
               </div>
             ) : (
@@ -97,15 +97,17 @@ export default function App() {
           </div>
         </div>
 
-        <aside className="order-1 flex flex-col gap-2 lg:order-2">
-          <div className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900/60 px-3 py-2">
-            <h2 className="text-sm font-semibold text-zinc-200">Approvals</h2>
-            <span className="text-[11px] text-zinc-500">{pending.length} waiting</span>
+        <aside className="order-1 flex flex-col gap-2.5 lg:order-2">
+          <div className="flex items-center justify-between rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 shadow-sm">
+            <h2 className="text-sm font-bold text-[#2a0845]">Approvals</h2>
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-900">
+              {pending.length} waiting
+            </span>
           </div>
           <div className="flex max-h-[420px] min-h-[80px] flex-col gap-2 overflow-y-auto">
             {pending.length === 0 ? (
-              <p className="rounded-xl border border-zinc-800 bg-zinc-900/40 px-3 py-6 text-sm text-zinc-500">
-                Nothing waiting for you.
+              <p className="rounded-xl border border-slate-200 bg-white px-3 py-6 text-sm text-slate-500 shadow-xs text-center">
+                Nothing waiting for approval.
               </p>
             ) : (
               pending.map((approval) => (

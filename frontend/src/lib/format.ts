@@ -22,21 +22,21 @@ export const DECISION_ICON: Record<Decision, string> = {
 };
 
 export const DECISION_CLASS: Record<Decision, string> = {
-  ALLOW: "bg-emerald-500/15 text-emerald-300 border-emerald-500/40",
-  MASK: "bg-amber-500/15 text-amber-300 border-amber-500/40",
-  HOLD: "bg-sky-500/15 text-sky-300 border-sky-500/40",
-  BLOCK: "bg-red-500/15 text-red-300 border-red-500/40",
+  ALLOW: "bg-emerald-50 text-emerald-800 border-emerald-300 font-medium",
+  MASK: "bg-amber-50 text-amber-900 border-amber-300 font-medium",
+  HOLD: "bg-sky-50 text-sky-900 border-sky-300 font-medium",
+  BLOCK: "bg-rose-50 text-rose-800 border-rose-300 font-medium",
 };
 
 export const NODE_STATE_META: Record<
   NodeState,
   { label: string; icon: string; color: string; css: string }
 > = {
-  unvisited: { label: "Unvisited", icon: "○", color: "#71717a", css: "text-zinc-400" },
-  accessed: { label: "Accessed", icon: "●", color: "#34d399", css: "text-emerald-300" },
-  masked: { label: "Masked", icon: "◐", color: "#fbbf24", css: "text-amber-300" },
-  held: { label: "Held", icon: "⏸", color: "#60a5fa", css: "text-sky-300" },
-  blocked: { label: "Blocked", icon: "🔒", color: "#f87171", css: "text-red-300" },
+  unvisited: { label: "Unvisited", icon: "○", color: "#94a3b8", css: "text-slate-500" },
+  accessed: { label: "Accessed", icon: "●", color: "#10b981", css: "text-emerald-700" },
+  masked: { label: "Masked", icon: "◐", color: "#f59e0b", css: "text-amber-800" },
+  held: { label: "Held", icon: "⏸", color: "#3b82f6", css: "text-sky-700" },
+  blocked: { label: "Blocked", icon: "🔒", color: "#ef4444", css: "text-rose-700" },
 };
 
 export const CONNECTOR_ICON: Record<ConnectorName, string> = {
@@ -108,28 +108,28 @@ export const CATEGORY_META: Record<
 > = {
   secret: {
     label: "Secret",
-    mark: "bg-red-500/30 text-red-100 underline decoration-red-400 decoration-2",
-    dot: "bg-red-400",
+    mark: "bg-red-100 text-red-900 underline decoration-red-500 decoration-2 font-medium",
+    dot: "bg-red-500",
   },
   personal: {
     label: "Personal data",
-    mark: "bg-amber-500/30 text-amber-50 underline decoration-amber-400 decoration-2",
-    dot: "bg-amber-400",
+    mark: "bg-amber-100 text-amber-900 underline decoration-amber-500 decoration-2 font-medium",
+    dot: "bg-amber-500",
   },
   financial: {
     label: "Financial",
-    mark: "bg-purple-500/30 text-purple-50 underline decoration-purple-400 decoration-2",
-    dot: "bg-purple-400",
+    mark: "bg-purple-100 text-purple-900 underline decoration-purple-500 decoration-2 font-medium",
+    dot: "bg-purple-500",
   },
   logic: {
     label: "Code logic",
-    mark: "bg-sky-500/30 text-sky-50 underline decoration-sky-400 decoration-2",
-    dot: "bg-sky-400",
+    mark: "bg-sky-100 text-sky-900 underline decoration-sky-500 decoration-2 font-medium",
+    dot: "bg-sky-500",
   },
   other: {
     label: "Other",
-    mark: "bg-zinc-500/30 text-zinc-100 underline decoration-zinc-400 decoration-2",
-    dot: "bg-zinc-400",
+    mark: "bg-slate-100 text-slate-800 underline decoration-slate-400 decoration-2 font-medium",
+    dot: "bg-slate-400",
   },
 };
 

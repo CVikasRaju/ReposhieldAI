@@ -143,15 +143,18 @@ export function KnowledgeGraph() {
   {
     selector: "node",
     style: {
-      "background-color": "#3f3f46",
-      "background-opacity": 0.9,
+      "background-color": "#cbd5e1",
+      "background-opacity": 0.95,
       "border-width": 2,
-      "border-color": "#52525b",
+      "border-color": "#94a3b8",
       label: "data(label)",
-      color: "#e4e4e7",
-      "font-size": 9,
+      color: "#1e1035",
+      "font-weight": 600,
+      "text-outline-color": "#ffffff",
+      "text-outline-width": 2,
+      "font-size": 10,
       "text-valign": "bottom",
-      "text-margin-y": 3,
+      "text-margin-y": 4,
       "text-wrap": "ellipsis",
       "text-max-width": "96px",
       width: 22,
@@ -163,46 +166,46 @@ export function KnowledgeGraph() {
   },
   {
     selector: "node[type='dir']",
-    style: { shape: "round-rectangle", width: 30, height: 24, "background-opacity": 0.6 },
+    style: { shape: "round-rectangle", width: 30, height: 24, "background-color": "#e2e8f0" },
   },
   { selector: "node[type='database']", style: { shape: "ellipse", width: 30, height: 30 } },
   { selector: "node[type='table']", style: { shape: "diamond", width: 26, height: 26 } },
   { selector: "node[type='host']", style: { shape: "hexagon", width: 30, height: 30 } },
   {
     selector: "node.state-accessed",
-    style: { "background-color": "#34d399", "border-color": "#6ee7b7" },
+    style: { "background-color": "#10b981", "border-color": "#059669" },
   },
   {
     selector: "node.state-masked",
-    style: { "background-color": "#fbbf24", "border-color": "#fcd34d" },
+    style: { "background-color": "#f59e0b", "border-color": "#d97706" },
   },
   {
     selector: "node.state-held",
     style: {
-      "background-color": "#60a5fa",
-      "border-color": "#93c5fd",
-      "underlay-color": "#60a5fa",
+      "background-color": "#3b82f6",
+      "border-color": "#2563eb",
+      "underlay-color": "#f59e0b",
     },
   },
   {
     selector: "node.state-blocked",
     style: {
-      "background-color": "#f87171",
-      "border-color": "#fca5a5",
+      "background-color": "#ef4444",
+      "border-color": "#dc2626",
       "border-width": 3,
       "underlay-color": "#ef4444",
     },
   },
   {
     selector: "node:selected",
-    style: { "border-color": "#a7f3d0", "border-width": 3 },
+    style: { "border-color": "#2a0845", "border-width": 3 },
   },
   {
     selector: "edge",
     style: {
-      width: 1,
-      "line-color": "#3f3f46",
-      "target-arrow-color": "#3f3f46",
+      width: 1.5,
+      "line-color": "#94a3b8",
+      "target-arrow-color": "#94a3b8",
       "target-arrow-shape": "triangle",
       "curve-style": "bezier",
       "arrow-scale": 0.6,
@@ -280,26 +283,26 @@ export function KnowledgeGraph() {
   const states: NodeState[] = ["unvisited", "accessed", "masked", "held", "blocked"];
 
   return (
-    <section className="flex min-h-0 flex-col rounded-xl border border-zinc-800 bg-zinc-900/60">
-      <header className="flex items-center justify-between border-b border-zinc-800 px-3 py-2">
-        <h2 className="text-sm font-semibold text-zinc-200">Knowledge graph</h2>
-        <span className="text-[11px] text-zinc-500">What the AI thinks it knows</span>
+    <section className="flex min-h-0 flex-col rounded-2xl border border-slate-300 bg-white shadow-sm">
+      <header className="flex items-center justify-between border-b border-slate-200 px-4 py-2.5 bg-slate-50/70 rounded-t-2xl">
+        <h2 className="text-sm font-bold text-[#2a0845]">Knowledge graph</h2>
+        <span className="text-[11px] font-medium text-slate-500">What the AI thinks it knows</span>
       </header>
       <div className="relative min-h-[260px] flex-1">
         {/* Cytoscape forces its container to position: relative, so size it directly. */}
         <div ref={containerRef} className="h-full w-full" aria-label="Workspace knowledge graph" />
         {graph && graph.nodes.length === 0 ? (
-          <p className="absolute inset-0 flex items-center justify-center text-sm text-zinc-500">
+          <p className="absolute inset-0 flex items-center justify-center text-sm text-slate-500">
             Waiting for the agent to touch the workspace.
           </p>
         ) : null}
       </div>
-      <footer className="border-t border-zinc-800 px-3 py-2">
+      <footer className="border-t border-slate-200 px-4 py-2.5 bg-slate-50/70 rounded-b-2xl">
         <ul className="flex flex-wrap gap-x-4 gap-y-1">
           {states.map((state) => {
             const meta = NODE_STATE_META[state];
             return (
-              <li key={state} className="flex items-center gap-1.5 text-[11px] text-zinc-400">
+              <li key={state} className="flex items-center gap-1.5 text-[11px] text-slate-600 font-semibold">
                 <span
                   aria-hidden
                   className="inline-block h-2.5 w-2.5 rounded-full"
@@ -311,7 +314,7 @@ export function KnowledgeGraph() {
             );
           })}
         </ul>
-        <p className="mt-1 text-[11px] text-zinc-500">
+        <p className="mt-1 text-[11px] text-slate-500">
           Green: the agent has seen it. Grey: it has not. Double-click a folder to collapse it.
         </p>
       </footer>
