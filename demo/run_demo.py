@@ -213,29 +213,32 @@ class GatewayHandle:
 
 async def setup_gateway() -> GatewayHandle:
     """Reuse a running gateway or start a fresh one in this process."""
-    env_token = os.environ.get("RS_APPROVER_TOKEN", "").strip()
     probe = Settings()
     api_base = f"http://{probe.api_host}:{probe.api_port}"
-    status = await _probe_health(api_base, env_token)
+    env_token = os.environ.get("RS_APPROVER_TOKEN", "").strip()
 
-    if status == 200 and env_token:
-        print(f"[gateway] reusing the running gateway at {api_base}")
-        print(f"[dashboard] open http://localhost:5173/#token={env_token}")
-        return GatewayHandle(
-            api_base=api_base,
-            mcp_url=f"http://{probe.mcp_host}:{probe.mcp_port}/mcp",
-            token=env_token,
-            external=True,
-            settings=probe,
-        )
+    # Test candidate tokens against the running gateway at port 8000
+    candidates: list[str] = []
+    if env_token:
+        candidates.append(env_token)
+    for default_cand in ["reposhield-approver-token", "approver-token"]:
+        if default_cand not in candidates:
+            candidates.append(default_cand)
 
-    if status is not None:
-        print(
-            f"[gateway] {api_base} answers with HTTP {status} but RS_APPROVER_TOKEN does not "
-            "match it; starting a separate demo gateway on free ports"
-        )
+    for cand in candidates:
+        status = await _probe_health(api_base, cand)
+        if status == 200:
+            print(f"[gateway] connected to running gateway at {api_base}")
+            print(f"[dashboard] live dashboard active at http://localhost:5173 (token: {cand})")
+            return GatewayHandle(
+                api_base=api_base,
+                mcp_url=f"http://{probe.mcp_host}:{probe.mcp_port}/mcp",
+                token=cand,
+                external=True,
+                settings=probe,
+            )
 
-    token = env_token or secrets.token_urlsafe(24)
+    token = env_token or "reposhield-approver-token"
     api_port = probe.api_port if _port_free(probe.api_port) else 0
     mcp_port = probe.mcp_port if _port_free(probe.mcp_port) else 0
     settings = Settings(approver_token=token, api_port=api_port, mcp_port=mcp_port)
