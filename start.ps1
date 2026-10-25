@@ -42,7 +42,7 @@ $frontendProcess = Start-Process -FilePath $npmCmd -ArgumentList "run", "dev" -W
 Start-Sleep -Seconds 3
 
 # 7. Open Browser
-$dashboardUrl = "http://localhost:5173/#token=$token"
+$dashboardUrl = "http://localhost:5173"
 Write-Host "[*] Launching browser: $dashboardUrl" -ForegroundColor Cyan
 Start-Process $dashboardUrl
 
@@ -51,8 +51,8 @@ Write-Host "====================================================================
 Write-Host " STATUS: RepoShield AI is active and protecting your workspace!" -ForegroundColor Green
 Write-Host "======================================================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "  - Web Dashboard: $dashboardUrl" -ForegroundColor White
-Write-Host "  - MCP Endpoint:  http://127.0.0.1:8001/mcp" -ForegroundColor White
+Write-Host "  - Web Dashboard:  $dashboardUrl" -ForegroundColor White
+Write-Host "  - MCP Endpoint:   http://127.0.0.1:8001/mcp" -ForegroundColor White
 Write-Host "  - Approver Token: $token" -ForegroundColor Yellow
 Write-Host ""
 Write-Host " Connect your AI Assistant (Cursor / Claude / Cline) to:" -ForegroundColor Cyan

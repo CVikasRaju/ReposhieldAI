@@ -38,7 +38,7 @@ FRONTEND_PID=$!
 sleep 3
 
 # 6. Open Browser
-DASHBOARD_URL="http://localhost:5173/#token=$RS_APPROVER_TOKEN"
+DASHBOARD_URL="http://localhost:5173"
 echo "[*] Opening browser: $DASHBOARD_URL"
 if command -v xdg-open >/dev/null 2>&1; then
     xdg-open "$DASHBOARD_URL"

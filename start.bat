@@ -45,15 +45,15 @@ timeout /t 3 /nobreak >nul
 
 :: 7. Open browser automatically
 echo [*] Launching dashboard in browser...
-start http://localhost:5173/#token=%RS_APPROVER_TOKEN%
+start http://localhost:5173
 
 echo.
 echo ======================================================================
 echo  STATUS: RepoShield AI is active and protecting your workspace!
 echo ======================================================================
 echo.
-echo   - Web Dashboard: http://localhost:5173/#token=%RS_APPROVER_TOKEN%
-echo   - MCP Endpoint:  http://127.0.0.1:8001/mcp
+echo   - Web Dashboard:  http://localhost:5173
+echo   - MCP Endpoint:   http://127.0.0.1:8001/mcp
 echo   - Approver Token: %RS_APPROVER_TOKEN%
 echo.
 echo  Connect your AI Assistant (Cursor / Claude / Cline) to:
