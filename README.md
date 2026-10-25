@@ -59,15 +59,15 @@ When AI coding agents (Claude Code, Cursor, Cline, Devin, AutoGen, CrewAI) opera
   - **Port 8001 (`/mcp`):** Dedicated exclusively to agent interactions. Exposes no approval routes, no admin endpoints, and leaks no policy details.
   - **Port 8000 (`/api/*`, `/ws`):** Dedicated exclusively to human operators. Protected by constant-time `RS_APPROVER_TOKEN` authentication.
 - **4-Signal Sensitivity & Risk Scoring:**
-  - Evaluates **Pattern** (regex + entropy), **Location** (file path & table sensitivity hints), **Content Model** (offline scikit-learn TF-IDF + Logistic Regression running <20ms), and **Behavior** (sliding-window anomaly detection, scope mismatch, consecutive blocked attempts).
+  - Evaluates **Pattern** (regex + entropy), **Location** (file path & table sensitivity hints), **Content Model** (offline scikit-learn TF-IDF + Logistic Regression), and **Behavior** (sliding-window anomaly detection, scope mismatch, consecutive blocked attempts). The whole decision is offline and deterministic — median 16.7 ms, p95 33.6 ms.
   - Decision Matrix: `ALLOW` < `MASK` < `HOLD` < `BLOCK` (*strictest always wins*).
 - **Structure-Preserving Masking & Restore-on-Write:**
-  - Replaces sensitive function bodies in Python ASTs with indentation-preserving markers (`/* [MASKED_LOGIC_BLOCK_01] */`) and customer PII with typed placeholders (`[EMAIL_1]`, `[CARD_1]`).
+  - Replaces sensitive function bodies in Python ASTs with indentation-preserving markers (`pass  # [MASKED_LOGIC_BLOCK_01]`) and customer data with typed placeholders (`[MASKED_SECRET_01]`, `[EMAIL_1]`, `[MASKED_CARD_1]`, `[MASKED_SSN_1]`) that differ per session and per value.
   - When the agent writes the file back, RepoShield matches placeholders against the session map and seamlessly restores original values.
 - **Dual-Channel Human-in-the-Loop (HITL) Freeze:**
-  - Risky actions trigger an in-memory `asyncio.Event` freeze. Reviewers resolve via terminal CLI or the web dashboard with `APPROVE`, `EDIT` (approve with forced masking), or `STOP` (deny).
+  - Risky actions trigger an in-memory `asyncio.Event` freeze. Reviewers resolve on the terminal prompt (`y` / `m` / `n`) or the dashboard card — **Approve**, **Approve with masking**, **Stop** (deny and lock the session) or **Deny only**. An unanswered request denies itself when the 60-second timer expires.
 - **Snapshot & One-Click Undo:**
-  - Automatic atomic filesystem copies and SQLite transaction backups prior to Tier 2/3 writes. Revert unwanted changes instantly with a single click.
+  - Atomic filesystem copies and SQLite backups are taken before every approved write, delete or destructive command. Revert unwanted changes instantly from the intervention log.
 - **Tamper-Evident Canonical Hash-Chained Audit Ledger:**
   - Every event is signed with `SHA-256(prev_hash + canonical_json(event))`. Any alteration of audit records immediately breaks the chain at that exact sequence number.
 
@@ -76,7 +76,7 @@ When AI coding agents (Claude Code, Cursor, Cline, Devin, AutoGen, CrewAI) opera
 ## 📸 Interactive Dashboard
 
 RepoShield includes a high-performance React dashboard featuring:
-- **Interactive Knowledge Graph:** Live graph visualization of files, tables, and external endpoints color-coded by access state (Green: Allowed, Amber: Held, Red: Blocked, Blue: Masked).
+- **Interactive Knowledge Graph:** Live graph of every file, table and external host the agent has touched, colored by access state — green: accessed, amber: masked, blue: held for approval, red: blocked.
 - **Real-Time HITL Approval Cards:** Review pending requests with full risk breakdowns, preview diffs, and choose whether to approve, mask, or deny.
 - **Sanitization Delta View:** Side-by-side comparison showing raw sensitive data vs. what the agent was actually allowed to observe.
 - **Cryptographic Ledger Verifier:** In-browser verification button confirming linear hash-chain integrity.
@@ -92,6 +92,15 @@ RepoShield includes a high-performance React dashboard featuring:
 ---
 
 ## ⚡ Quickstart
+
+### Prerequisites
+
+| Requirement | Needed for |
+|---|---|
+| Python 3.11+ | Gateway, tests, evaluation |
+| Node 20+ | Dashboard (`make frontend`) |
+| `make` (Git Bash on Windows) | All commands below |
+| Docker (optional) | Hardened sandbox and `make verify-isolation` |
 
 ### 1. Installation & Environment Setup
 
@@ -202,8 +211,12 @@ RepoShield provides 8 standard tools conforming to the **Model Context Protocol 
 - **Database:** `db_schema`, `db_query` (SQLite read/write with automatic snapshots)
 - **Network:** `http_request` (outbound egress filtering, SSRF prevention)
 
-### 1. Claude Desktop / Claude Code
-Add RepoShield to your `claude_desktop_config.json`:
+### 1. Claude Code / Claude Desktop
+Claude Code registers the Streamable HTTP endpoint in one command:
+```bash
+claude mcp add --transport http reposhield http://127.0.0.1:8001/mcp
+```
+For Claude Desktop, add the same endpoint to `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
@@ -353,7 +366,7 @@ kill_switch:
 | **Context accuracy (21 pairs)** | 2/21 | **12/21** | ≥ 85% | Missed |
 | **Prompt-injection defence** | n/a | **5/5 stopped** | 5/5 | Met |
 | **Restore-on-write** | n/a | **20/20 byte-identical** | 20/20 | Met |
-| **Median decision latency** | n/a | **16.7 ms** | < 50 ms | Met |
+| **Median decision latency** | n/a | **16.7 ms** | — | — |
 | **p95 decision latency** | n/a | **33.6 ms** | < 150 ms | Met |
 
 The baseline buys its 4.1% false-positive rate by missing three of every five sensitive cases; RepoShield detects roughly twice as many at the cost of a higher false-positive rate — the honest state of an offline model. The remaining misses are concentrated in free-form secrets, proprietary-code detection and egress intent. Full confusion matrix, per-category breakdown and every failure case: [`eval/results/results.md`](eval/results/results.md).
@@ -380,8 +393,10 @@ ReposhieldAI/
 ├── sandbox/                     # Gateway and Agent Dockerfiles
 ├── scripts/                     # Seed scripts, tamper demo, isolation verification
 ├── docs/                        # Complete technical specifications (01 - 09)
+├── start.bat|ps1|sh             # 1-click launchers (gateway + dashboard + browser)
 ├── docker-compose.yml           # Zero-trust container topology
 ├── Makefile                     # Standard developer commands
+├── LICENSE                      # MIT
 └── .aishield                    # Canonical runtime policy
 ```
 

@@ -182,6 +182,23 @@ Skipped: nothing else.
 | Frontend build | `npm run build` | TypeScript clean, CSS 31.79 kB |
 | Fresh clone | `make setup && make seed && make train-model && make test && make lint` | all green: 239 tests passed, lint clean (re-checked on a fresh clone on 2026-10-19) |
 
+## Update — 2026-10-25
+
+- `make test` → **241 passed**, `make lint` clean. The suite grew after the
+  phase-8 snapshot above; the numbers in the tables are left as measured on
+  their date.
+- `demo/full_demo.py` and the `full-demo` target were removed. It was a
+  near-copy of `demo/run_demo.py` running a subset of the same checks;
+  `make demo` is unchanged and still reports 29 passed, 0 failed.
+- The dashboard knowledge graph now renders reliably. Cytoscape forces its
+  container to `position: relative`, so the absolutely positioned canvas had
+  zero height; React StrictMode remounts also left sync calls pointing at a
+  destroyed instance, and compound parent nodes made `cose` produce a
+  57,000 × 16,000 px parent that fit-zoomed to 0.3. The graph is now sized
+  directly, synced on creation, and draws hierarchy with edges.
+- The README benchmark table now quotes `eval/results/results.md` verbatim,
+  including the three missed targets, and `LICENSE` (MIT) exists.
+
 ## Known limitations
 
 - The content model misses proprietary prose and several password-style
